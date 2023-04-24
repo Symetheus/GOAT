@@ -1,6 +1,8 @@
 # GOAT
 [4MOC][Android] Quizz sur les citations des personnages de la série Game of Thrones
 
+✨ ***Be the GOAT of GoT*** ✨
+
 API link: https://gameofthronesquotes.xyz/
 
 Jeu où l'on doit deviner à qui appartient une citation dans la série Game of Thrones.
