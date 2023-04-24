@@ -36,3 +36,6 @@ l'utilisateur doit choisir le bon personnage.
 - Accéder à son classement en comparaison avec les autres joueurs
 - Accéder à la complétion du parcours Daily sur la totalité des citations possibles (avec un
   pourcentage de complétion)
+
+
+*Réalisé par : Elsa, Rafiq & Timoté*
