@@ -1,9 +1,13 @@
 package com.example.goat.presentation.auth
 
 sealed class AuthEvent {
-    object OnLoginClicked : AuthEvent()
+    data class OnLoginClicked(val email: String = "", val password: String = "") : AuthEvent()
 
-    object OnRegisterClicked : AuthEvent()
+    data class OnRegisterClicked(
+        val email: String,
+        val password: String,
+        val passwordConfirmation: String
+    ) : AuthEvent()
 
-    object OnForgotPasswordClicked : AuthEvent()
+    object OnSwapFormClicked : AuthEvent()
 }

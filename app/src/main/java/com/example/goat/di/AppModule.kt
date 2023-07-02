@@ -2,7 +2,9 @@ package com.example.goat.di
 
 import com.example.goat.common.BASE_URL
 import com.example.goat.data.remote.api.GotqApi
+import com.example.goat.data.repository.AuthenticationDataSource
 import com.example.goat.data.repository.GotqDataSource
+import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.GotqRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.squareup.moshi.Moshi
@@ -42,5 +44,11 @@ object AppModule {
     @Singleton
     fun provideFirebaseAuthentication(): FirebaseAuth {
         return FirebaseAuth.getInstance()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthenticationRepository(auth: FirebaseAuth): AuthenticationRepository {
+        return AuthenticationDataSource(auth)
     }
 }

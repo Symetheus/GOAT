@@ -8,7 +8,22 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class SignUpUC @Inject constructor(private val authRepository: AuthenticationRepository) {
-    operator fun invoke(email: String, password: String): Flow<Resource<User?>> = flow {
+    operator fun invoke(
+        email: String,
+        password: String,
+        passwordConfirmation: String
+    ): Flow<Resource<User?>> = flow {
+
+        if (email.isEmpty() || password.isEmpty() || passwordConfirmation.isEmpty()) {
+            emit(Resource.Error(message = "Veuillez remplir tous les champs."))
+            return@flow
+        }
+
+        if (password != passwordConfirmation) {
+            emit(Resource.Error(message = "Les mots de passe ne correspondent pas."))
+            return@flow
+        }
+
         try {
             emit(Resource.Loading())
             val user = authRepository.signUp(email, password)

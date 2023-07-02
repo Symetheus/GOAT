@@ -4,19 +4,20 @@ import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthenticationDataSource @Inject constructor(private val auth: FirebaseAuth) :
     AuthenticationRepository {
     override suspend fun signIn(email: String, password: String): User? {
-        auth.signInWithEmailAndPassword(email, password).let {
-            return it.result?.user?.toUser()
+        auth.signInWithEmailAndPassword(email, password).await().let {
+            return it.user?.toUser()
         }
     }
 
     override suspend fun signUp(email: String, password: String): User? {
-        auth.createUserWithEmailAndPassword(email, password).let {
-            return it.result?.user?.toUser()
+        auth.createUserWithEmailAndPassword(email, password).await().let {
+            return it.user?.toUser()
         }
     }
 

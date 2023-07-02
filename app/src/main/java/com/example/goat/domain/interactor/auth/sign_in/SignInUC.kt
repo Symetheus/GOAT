@@ -9,12 +9,19 @@ import javax.inject.Inject
 
 class SignInUC @Inject constructor(private val authRepository: AuthenticationRepository) {
     operator fun invoke(email: String, password: String): Flow<Resource<User?>> = flow {
+
+        if (email.isEmpty() || password.isEmpty()) {
+            emit(Resource.Error(message = "Veuillez remplir tous les champs."))
+            return@flow
+        }
+
         try {
             emit(Resource.Loading())
             val user = authRepository.signIn(email, password)
             emit(Resource.Success(user))
         } catch (e: Exception) {
-            emit(Resource.Error(message = "Error with {${e.localizedMessage}}"))
+            // emit(Resource.Error(message = "Error with {${e.localizedMessage}}"))
+            emit(Resource.Error(message = "Une erreur est survenue lors de la connexion."))
         }
     }
 }

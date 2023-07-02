@@ -14,7 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.goat.presentation.auth.AuthScreen
 import com.example.goat.presentation.ui.theme.GoatTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,9 +40,7 @@ fun MainScreen() {
 
     NavHost(navController = navController, startDestination = Screen.MainScreen.route) {
         composable(route = Screen.MainScreen.route) {
-            AuthScreen(onLoginClicked = { _, _ -> })
+            AuthScreen()
         }
     }
-
-    Text(text = "Hello World!")
 }
