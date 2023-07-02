@@ -1,4 +1,4 @@
-package com.example.goat.ui.theme
+package com.example.goat.presentation.ui.theme
 
 import android.app.Activity
 import android.os.Build
