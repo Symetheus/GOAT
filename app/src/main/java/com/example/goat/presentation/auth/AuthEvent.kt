@@ -10,4 +10,6 @@ sealed class AuthEvent {
     ) : AuthEvent()
 
     object OnSwapFormClicked : AuthEvent()
+
+    object GetUser : AuthEvent()
 }

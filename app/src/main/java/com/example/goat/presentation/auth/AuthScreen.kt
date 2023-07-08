@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.ScaffoldState
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,22 +18,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.goat.domain.model.User
+import androidx.navigation.NavController
+import com.example.goat.presentation.Screen
 
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -43,8 +45,11 @@ fun AuthScreen(
         uiState = uiState.value,
         viewModel = viewModel,
         onSwapFormClicked = { viewModel.onEventChanged(AuthEvent.OnSwapFormClicked) },
+        navController = navController,
     )
 
+    // check if user is already logged in
+    viewModel.onEventChanged(AuthEvent.GetUser)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -54,6 +59,7 @@ fun AuthContent(
     uiState: UiState,
     viewModel: AuthViewModel,
     onSwapFormClicked: () -> Unit,
+    navController: NavController,
 ) {
     Scaffold(
         content = {
@@ -67,7 +73,11 @@ fun AuthContent(
                 Text(text = "Goat", style = MaterialTheme.typography.displayLarge)
 
                 if (uiState.isSignInFormVisible) {
-                    SignInForm(uiState = uiState, viewModel = viewModel)
+                    SignInForm(
+                        uiState = uiState,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
                 } else {
                     SignUpForm(uiState = uiState, viewModel = viewModel)
                 }
@@ -92,6 +102,7 @@ fun AuthContent(
 fun SignInForm(
     uiState: UiState,
     viewModel: AuthViewModel,
+    navController: NavController,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -130,6 +141,10 @@ fun SignInForm(
 
         uiState.user != null -> {
             Text(text = "Bienvenue ${uiState.user.email}")
+            print(Screen.HomeScreen.route)
+            LaunchedEffect(Unit) {
+                navController.navigate(Screen.HomeScreen.route)
+            }
         }
     }
 
@@ -204,4 +219,4 @@ fun SignUpForm(
 
 @Preview(showBackground = true)
 @Composable
-fun AuthScreenPreview() = AuthScreen()
+fun AuthScreenPreview() = AuthScreen(navController = NavController(LocalContext.current))
