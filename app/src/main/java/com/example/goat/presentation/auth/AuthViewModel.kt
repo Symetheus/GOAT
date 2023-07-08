@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
@@ -31,6 +30,36 @@ class AuthViewModel @Inject constructor(private val interactor: AuthInteractor) 
                 )
             }
         }
+    }
+
+    private fun onCheckUserAuth() {
+        interactor.getCurrentUserUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        user = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = resource.data,
+                        error = "",
+                    )
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = null,
+                        error = "", // do not display error here!
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
     private fun signIn(email: String, password: String) {
@@ -99,6 +128,7 @@ class AuthViewModel @Inject constructor(private val interactor: AuthInteractor) 
     fun onEventChanged(event: AuthEvent) {
         when (event) {
             AuthEvent.OnSwapFormClicked -> swapForm()
+            is AuthEvent.GetUser -> onCheckUserAuth()
             is AuthEvent.OnLoginClicked -> signIn(event.email, event.password)
             is AuthEvent.OnRegisterClicked -> signUp(
                 event.email,
