@@ -1,6 +1,6 @@
 package com.example.goat.data.remote.api
 
-import com.example.goat.data.remote.dto.quote.QuotesResponse
+import com.example.goat.data.remote.dto.character.CharactersResponseItem
 import com.example.goat.data.remote.dto.quote.QuotesResponseItem
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -9,19 +9,21 @@ import retrofit2.http.Path
 /// https://gameofthronesquotes.xyz/
 interface GotqApi {
     // QUOTES
-    @GET("/random")
+    @GET("random")
     suspend fun getRandomQuote(): QuotesResponseItem
 
-    @GET("/random/{quotesNumber}")
-    suspend fun getSeveralRandomQuotes(@Path("quotesNumber") quotesNumber: String): QuotesResponse
+    @GET("random/{quotesNumber}")
+    suspend fun getSeveralRandomQuotes(@Path("quotesNumber") quotesNumber: String): List<QuotesResponseItem>
 
-    @GET("/author/{character}/{quotesNumber}")
+    @GET("author/{character}/{quotesNumber}")
     suspend fun getQuotesByCharacter(
         @Path("character") character: String,
         @Path("quotesNumber") quotesNumber: String
-    ): QuotesResponse
+    ): List<QuotesResponseItem>
 
     // HOUSES
 
     // CHARACTERS
+    @GET("characters")
+    suspend fun getCharactersList(): List<CharactersResponseItem>
 }

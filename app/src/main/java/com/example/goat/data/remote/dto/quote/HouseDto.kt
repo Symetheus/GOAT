@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 
 data class HouseDto(
     @Json(name = "name")
-    val name: String,
+    val name: String?,
     @Json(name = "slug")
-    val slug: String
+    val slug: String?
 )

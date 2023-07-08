@@ -6,7 +6,7 @@ import com.squareup.moshi.Json
 
 data class CharactersResponseItem(
     @Json(name = "house")
-    val house: HouseDto,
+    val house: HouseDto?,
     @Json(name = "name")
     val name: String,
     @Json(name = "quotes")
@@ -18,7 +18,7 @@ data class CharactersResponseItem(
 fun CharactersResponseItem.toCharacter() = Character(
     name = name,
     slug = slug,
-    house = house.name,
-    houseSlug = house.slug,
+    house = house?.name ?: "",
+    houseSlug = house?.slug ?: "",
     quotes = quotes ?: emptyList()
 )

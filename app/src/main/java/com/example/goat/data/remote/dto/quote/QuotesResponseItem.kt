@@ -15,6 +15,6 @@ fun QuotesResponseItem.toQuote() = Quote(
     quote = sentence,
     character = character.name,
     characterSlug = character.slug,
-    house = character.house.name,
-    houseSlug = character.house.slug,
+    house = character.house?.name ?: "",
+    houseSlug = character.house?.slug ?: "",
 )
