@@ -1,3 +1,3 @@
 package com.example.goat.common
 
-const val BASE_URL = "https://gameofthronesquotes.xyz/v1"
+const val BASE_URL = "https://api.gameofthronesquotes.xyz/v1/"
