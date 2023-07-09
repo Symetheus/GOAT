@@ -8,14 +8,14 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 class GetRandomQuoteUC @Inject constructor(private val gotqRepository: GotqRepository) {
-    operator fun invoke(): Flow<Resource<Quote?>> = flow {
+    operator fun invoke(): Flow<Resource<Quote>> = flow {
         try {
             emit(Resource.Loading())
             val quote = gotqRepository.getRandomQuote()
             emit(Resource.Success(quote))
         } catch (e: Exception) {
             // emit(Resource.Error(message = "Error with {${e.localizedMessage}}"))
-            emit(Resource.Error(message = "Une erreur est survenur lors de la récupération des questions"))
+            emit(Resource.Error(message = "Une erreur est survenur lors de la récupération de la question"))
         }
     }
 }

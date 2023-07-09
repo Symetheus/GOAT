@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.gotq.GotqInteractor
 import com.example.goat.domain.model.Answer
+import com.example.goat.domain.model.Character
 import com.example.goat.domain.model.toAnswer
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,8 +36,11 @@ class QuizViewModel @Inject constructor(private val interactor: GotqInteractor) 
 
                 is Resource.Success -> {
                     val data = resource.data
+                    val characters = generateCharacters()
+
                     data?.forEach {
-                        it.answers = generatesAnswers(it.toAnswer().copy(veracity = true))
+                        it.answers =
+                            generatesAnswers(it.toAnswer().copy(veracity = true), characters)
                     }
 
                     _uiState.update {
@@ -59,11 +63,55 @@ class QuizViewModel @Inject constructor(private val interactor: GotqInteractor) 
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
-    private suspend fun generatesAnswers(trueAnswer: Answer): List<Answer> {
-        val characters = interactor.getCharactersUC.invokeCharacters()
+    private fun getRandomQuote() {
+        interactor.getRandomQuoteUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        quotes = null,
+                        error = "",
+                    )
+                }
 
-        return interactor.generateQuizAnswersUC(characters, trueAnswer)
+                is Resource.Success -> {
+                    val data = resource.data
+                    if (data != null) {
+                        val characters = generateCharacters()
+                        data.answers =
+                            generatesAnswers(data.toAnswer().copy(veracity = true), characters)
+                    }
+
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            quotes = if (data != null) listOf(data) else null,
+                            error = "",
+                        )
+                    }
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        quotes = null,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
+
+    private fun generatesAnswers(
+        trueAnswer: Answer,
+        characters: List<Character>
+    ): List<Answer> =
+        interactor.generateQuizAnswersUC(characters, trueAnswer)
+
+
+    private suspend fun generateCharacters(): List<Character> =
+        interactor.getCharactersUC.invokeCharacters()
+
 
     private fun handleAnswerSelection(
         currentQuestionIndex: MutableState<Int>,
@@ -107,7 +155,7 @@ class QuizViewModel @Inject constructor(private val interactor: GotqInteractor) 
 
     fun onEventChanged(event: QuizEvent) {
         when (event) {
-            QuizEvent.GetQuote -> TODO()
+            QuizEvent.GetQuote -> getRandomQuote()
             QuizEvent.GetSeveralQuotes -> getSeveralRandomQuotes()
             is QuizEvent.OnSelectAnswer -> handleAnswerSelection(
                 event.currentQuestionIndex,
