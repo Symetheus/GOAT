@@ -4,6 +4,7 @@ import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -17,6 +18,19 @@ class AuthenticationDataSource @Inject constructor(private val auth: FirebaseAut
 
     override suspend fun signUp(email: String, password: String): User? {
         auth.createUserWithEmailAndPassword(email, password).await().let {
+            /*
+            val userFirestore = User(
+                id = it.user!!.uid,
+                email = it.user!!.email,
+                name = "",
+                photo = it.user!!.photoUrl.toString(),
+                firstname = "",
+                lastname = "",
+            )
+            firestore.collection("users")
+                .document(it.user!!.uid)
+                .set(userFirestore)
+             */
             return it.user?.toUser()
         }
     }
@@ -37,6 +51,8 @@ fun FirebaseUser.toUser(): User {
         id = uid,
         email = email,
         name = displayName,
-        photo = photoUrl.toString()
+        photo = photoUrl.toString(),
+        firstname = null,
+        lastname = null,
     )
 }

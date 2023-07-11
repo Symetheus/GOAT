@@ -4,9 +4,12 @@ import com.example.goat.common.BASE_URL
 import com.example.goat.data.remote.api.GotqApi
 import com.example.goat.data.repository.AuthenticationDataSource
 import com.example.goat.data.repository.GotqDataSource
+import com.example.goat.data.repository.ProfileDataSource
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.GotqRepository
+import com.example.goat.domain.repository.ProfileRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -48,7 +51,19 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseFirestore(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthenticationRepository(auth: FirebaseAuth): AuthenticationRepository {
         return AuthenticationDataSource(auth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideProfileRepository(firestore: FirebaseFirestore, authenticationRepository: AuthenticationRepository): ProfileRepository {
+        return ProfileDataSource(firestore, authenticationRepository)
     }
 }
