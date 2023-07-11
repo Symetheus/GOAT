@@ -17,6 +17,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.goat.R
+import com.example.goat.presentation.Screen
 
 @Composable
 fun UserProfile(navController: NavController, viewModel: UserProfileViewModel = hiltViewModel()) {
@@ -63,7 +64,7 @@ fun UserProfile(navController: NavController, viewModel: UserProfileViewModel = 
         }
         Spacer(modifier = Modifier.height(26.dp))
         Button(
-            onClick = {},
+            onClick = { navController.navigate(Screen.UserModify.route) },
         ) {
             Text(
                 text = "Modifier mon profil",

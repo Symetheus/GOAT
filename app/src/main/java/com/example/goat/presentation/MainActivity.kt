@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.goat.presentation.auth.AuthScreen
 import com.example.goat.presentation.home.HomeScreen
+import com.example.goat.presentation.profile.UserModify
 import com.example.goat.presentation.profile.UserProfile
 import com.example.goat.presentation.quiz.ChallengeScreen
 import com.example.goat.presentation.quiz.DailyQuizScreen
@@ -51,6 +52,9 @@ fun MainScreen() {
         }
         composable(route = Screen.UserProfile.route) {
             UserProfile(navController = navController)
+        }
+        composable(route = Screen.UserModify.route) {
+            UserModify(navController = navController)
         }
         composable(route = Screen.DailyQuizScreen.route) {
             DailyQuizScreen(navController = navController)
