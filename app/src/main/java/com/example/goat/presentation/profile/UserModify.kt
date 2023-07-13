@@ -1,7 +1,8 @@
 package com.example.goat.presentation.profile
 
+import android.content.Context
 import android.net.Uri
-import android.util.Log
+import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -33,6 +34,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -44,11 +46,10 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.goat.R
 import com.example.goat.domain.model.User
 import com.google.firebase.storage.FirebaseStorage
-import com.google.firebase.storage.StorageReference
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import java.io.File
-import java.lang.ref.Reference
 import java.util.UUID
 
 
@@ -80,6 +81,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
             textEmail = TextFieldValue(user.email ?: "")
             textFirstname = TextFieldValue(user.firstname ?: "")
             textLastname = TextFieldValue(user.lastname ?: "")
+            imageUrl = user.photo ?: ""
         }
     }
 
@@ -89,12 +91,10 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Box(modifier = Modifier.size(120.dp)) {
-            if (imageUri != null) {
-                val imageFile = File(imageUri!!.path!!)
-                val imagePath = imageFile.absolutePath
+            if (imageUrl != "") {
                 Image(
-                    painter = rememberAsyncImagePainter(imageUri),
-                    contentDescription = "Selected Image",
+                    painter = rememberAsyncImagePainter(model = imageUrl),
+                    contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(120.dp)
                         .clip(shape = CircleShape)
