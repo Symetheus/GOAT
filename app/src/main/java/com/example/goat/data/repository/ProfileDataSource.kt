@@ -1,5 +1,6 @@
 package com.example.goat.data.repository
 
+import android.widget.Toast
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.ProfileRepository
@@ -21,7 +22,7 @@ class ProfileDataSource @Inject constructor(
             "email" to (user.email as String),
             "firstname" to (user.firstname as String),
             "lastname" to (user.lastname as String),
-            // "photo" to user.photo
+            "photo" to (user.photo as String)
         )
 
         try {
