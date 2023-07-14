@@ -20,9 +20,14 @@ import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import com.example.goat.R
 import com.example.goat.presentation.Screen
+import com.example.goat.presentation.auth.AuthViewModel
 
 @Composable
-fun UserProfile(navController: NavController, viewModel: UserProfileViewModel = hiltViewModel()) {
+fun UserProfile(
+    navController: NavController,
+    viewModel: UserProfileViewModel = hiltViewModel(),
+    viewAuthModel: AuthViewModel = hiltViewModel()
+) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -79,6 +84,18 @@ fun UserProfile(navController: NavController, viewModel: UserProfileViewModel = 
         ) {
             Text(
                 text = "Modifier mon profil",
+            )
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+        Button(
+            onClick = {
+                viewAuthModel.signOut()
+                navController.navigate(Screen.MainScreen.route)
+            },
+        ) {
+            Text(
+                text = "Se déconnecter",
             )
         }
     }

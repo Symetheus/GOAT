@@ -92,6 +92,36 @@ class AuthViewModel @Inject constructor(private val interactor: AuthInteractor) 
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
+    fun signOut() {
+        interactor.signOutUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        user = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = null,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
+
     private fun signUp(email: String, password: String, passwordConfirmation: String) {
         interactor.signUpUC(email, password, passwordConfirmation).onEach { resource ->
             when (resource) {
