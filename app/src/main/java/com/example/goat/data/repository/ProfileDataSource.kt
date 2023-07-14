@@ -1,16 +1,20 @@
 package com.example.goat.data.repository
 
+import android.net.Uri
 import android.widget.Toast
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.ProfileRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.tasks.await
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 class ProfileDataSource @Inject constructor(
     private val firestore: FirebaseFirestore,
+    private val firebaseStorage: FirebaseStorage,
     private val authenticationRepository: AuthenticationRepository
 ) :
     ProfileRepository {
@@ -78,6 +82,17 @@ class ProfileDataSource @Inject constructor(
             Timber.tag("Empty").d("No such document")
         }
         return User(authenticationRepository.getCurrentUser()!!.id, "", "", "", "", "")
+    }
+
+    override suspend fun stockImageFirebaseStorage(imageUri: Uri): String {
+            val referenceRoot = firebaseStorage.reference
+            val uniqueFilename = UUID.randomUUID().toString()
+            val referenceDirImages = referenceRoot.child("images")
+            val referenceImageToUpload = referenceDirImages.child(uniqueFilename)
+
+            referenceImageToUpload.putFile(imageUri).await()
+            val downloadUrl = referenceImageToUpload.downloadUrl.await().toString()
+            return downloadUrl
     }
 
 }

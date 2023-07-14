@@ -26,6 +26,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -57,9 +58,12 @@ import java.util.UUID
 @Composable
 fun UserModify(navController: NavController, viewModel: UserProfileViewModel = hiltViewModel()) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val downloadUrlState by viewModel.downloadUrlState.collectAsState()
     var textEmail by remember { mutableStateOf(TextFieldValue("")) }
     var textFirstname by remember { mutableStateOf(TextFieldValue("")) }
     var textLastname by remember { mutableStateOf(TextFieldValue("")) }
+    var imageUrl by remember { mutableStateOf("") }
+    var imageTrigger by remember { mutableStateOf(0) }
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher: ManagedActivityResultLauncher<String, Uri?> =
@@ -67,13 +71,28 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
             if (result != null) {
                 imageUri = result
                 viewModel.viewModelScope.launch {
-                    imageUrl = _firebaseStorageImage(imageUri!!)
+                    viewModel.stockImageFirebaseStorage(imageUri!!)
+                    imageTrigger++
                 }
             }
         }
 
     LaunchedEffect(Unit) {
         viewModel.getInformationUserUC()
+    }
+    LaunchedEffect(downloadUrlState) {
+        imageUrl = downloadUrlState ?: ""
+    }
+    LaunchedEffect(imageTrigger) {
+        if (imageTrigger > 0 && imageUrl.isBlank()) {
+            imageUrl = uiState.value.downloadUrl ?: ""
+        }
+    }
+
+    LaunchedEffect(imageUrl) {
+        if (imageUrl.isBlank()) {
+            imageUrl = uiState.value.downloadUrl ?: ""
+        }
     }
 
     LaunchedEffect(uiState.value.user) {
@@ -173,16 +192,4 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
             )
         }
     }
-}
-
-var imageUrl = ""
-suspend fun _firebaseStorageImage(imageUri: Uri): String{
-    val referenceRoot = FirebaseStorage.getInstance().reference
-    val uniqueFilename = UUID.randomUUID().toString()
-    val referenceDirImages = referenceRoot.child("images")
-    val referenceImageToUpload = referenceDirImages.child(uniqueFilename)
-
-    referenceImageToUpload.putFile(imageUri).await()
-    val downloadUrl = referenceImageToUpload.downloadUrl.await().toString()
-    return downloadUrl
 }

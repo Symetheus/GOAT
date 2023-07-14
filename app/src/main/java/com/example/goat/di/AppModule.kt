@@ -10,6 +10,7 @@ import com.example.goat.domain.repository.GotqRepository
 import com.example.goat.domain.repository.ProfileRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -57,13 +58,19 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideFirebaseStorage(): FirebaseStorage {
+        return FirebaseStorage.getInstance()
+    }
+
+    @Provides
+    @Singleton
     fun provideAuthenticationRepository(auth: FirebaseAuth): AuthenticationRepository {
         return AuthenticationDataSource(auth)
     }
 
     @Provides
     @Singleton
-    fun provideProfileRepository(firestore: FirebaseFirestore, authenticationRepository: AuthenticationRepository): ProfileRepository {
-        return ProfileDataSource(firestore, authenticationRepository)
+    fun provideProfileRepository(firestore: FirebaseFirestore, firebaseStorage: FirebaseStorage, authenticationRepository: AuthenticationRepository): ProfileRepository {
+        return ProfileDataSource(firestore, firebaseStorage,authenticationRepository)
     }
 }
