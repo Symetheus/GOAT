@@ -155,6 +155,33 @@ class AuthViewModel @Inject constructor(private val interactor: AuthInteractor) 
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
+    fun createUserFirestore(){
+        interactor.createUserFirestoreUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = "",
+                    )
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
+
     fun onEventChanged(event: AuthEvent) {
         when (event) {
             AuthEvent.OnSwapFormClicked -> swapForm()

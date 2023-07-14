@@ -8,7 +8,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class AuthenticationDataSource @Inject constructor(private val auth: FirebaseAuth) :
+class AuthenticationDataSource @Inject constructor(
+    private val auth: FirebaseAuth,
+    private val firestore: FirebaseFirestore
+) :
     AuthenticationRepository {
     override suspend fun signIn(email: String, password: String): User? {
         auth.signInWithEmailAndPassword(email, password).await().let {
@@ -18,20 +21,24 @@ class AuthenticationDataSource @Inject constructor(private val auth: FirebaseAut
 
     override suspend fun signUp(email: String, password: String): User? {
         auth.createUserWithEmailAndPassword(email, password).await().let {
-            /*
+            return it.user?.toUser()
+        }
+    }
+
+    override suspend fun createUserFirestore() {
+        val user = getCurrentUser()
+        if (user != null) {
             val userFirestore = User(
-                id = it.user!!.uid,
-                email = it.user!!.email,
+                id = user.id,
+                email = user.email,
                 name = "",
-                photo = it.user!!.photoUrl.toString(),
+                photo = "",
                 firstname = "",
                 lastname = "",
             )
             firestore.collection("users")
-                .document(it.user!!.uid)
+                .document(user.id)
                 .set(userFirestore)
-             */
-            return it.user?.toUser()
         }
     }
 
