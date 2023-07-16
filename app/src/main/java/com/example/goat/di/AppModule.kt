@@ -5,9 +5,11 @@ import com.example.goat.data.remote.api.GotqApi
 import com.example.goat.data.repository.AuthenticationDataSource
 import com.example.goat.data.repository.GotqDataSource
 import com.example.goat.data.repository.ProfileDataSource
+import com.example.goat.data.repository.UserDataSource
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.GotqRepository
 import com.example.goat.domain.repository.ProfileRepository
+import com.example.goat.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -72,5 +74,11 @@ object AppModule {
     @Singleton
     fun provideProfileRepository(firestore: FirebaseFirestore, firebaseStorage: FirebaseStorage, authenticationRepository: AuthenticationRepository): ProfileRepository {
         return ProfileDataSource(firestore, firebaseStorage,authenticationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUserRepository(firestore: FirebaseFirestore, authenticationRepository: AuthenticationRepository): UserRepository {
+        return UserDataSource(firestore,authenticationRepository)
     }
 }
