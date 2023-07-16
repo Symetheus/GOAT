@@ -6,6 +6,7 @@ data class UiState(
     val isSignInFormVisible: Boolean = true,
     val isLoading: Boolean = false,
     val user: User? = null,
+    val listUser: List<User>? = null,
     val downloadUrl: String? = "",
     val error: String = ""
 )

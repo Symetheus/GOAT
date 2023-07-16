@@ -86,8 +86,16 @@ fun UserProfile(
                 text = "Modifier mon profil",
             )
         }
+        Spacer(modifier = Modifier.height(5.dp))
+        Button(
+            onClick = { navController.navigate(Screen.ListAllPlayer.route) },
+        ) {
+            Text(
+                text = "Voir la liste des joueurs",
+            )
+        }
 
-        Spacer(modifier = Modifier.height(10.dp))
+        Spacer(modifier = Modifier.height(26.dp))
         Button(
             onClick = {
                 viewAuthModel.signOut()
