@@ -1,8 +1,6 @@
 package com.example.goat.presentation.profile
 
-import android.content.Context
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +19,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -30,12 +29,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
@@ -46,13 +45,8 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.goat.R
 import com.example.goat.domain.model.User
-import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
-import java.util.UUID
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,6 +58,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
     var textLastname by remember { mutableStateOf(TextFieldValue("")) }
     var imageUrl by remember { mutableStateOf("") }
     var imageTrigger by remember { mutableStateOf(0) }
+    var showSnackbar by remember { mutableStateOf(false) }
 
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val launcher: ManagedActivityResultLauncher<String, Uri?> =
@@ -73,6 +68,9 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                 viewModel.viewModelScope.launch {
                     viewModel.stockImageFirebaseStorage(imageUri!!)
                     imageTrigger++
+                    if (imageTrigger == 1) {
+                        showSnackbar = true
+                    }
                 }
             }
         }
@@ -86,6 +84,9 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
     LaunchedEffect(imageTrigger) {
         if (imageTrigger > 0 && imageUrl.isBlank()) {
             imageUrl = uiState.value.downloadUrl ?: ""
+        }
+        if (imageTrigger > 1) {
+            showSnackbar = true
         }
     }
 
@@ -191,5 +192,19 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                 text = "Modifier",
             )
         }
+
+        if (showSnackbar) {
+            LaunchedEffect(showSnackbar) {
+                delay(2000)
+                showSnackbar = false
+            }
+            Snackbar(
+                modifier = Modifier.padding(16.dp),
+                content = { Text("Image bien importée") },
+                contentColor = Color.Black,
+                containerColor = Color.Green,
+            )
+        }
+
     }
 }
