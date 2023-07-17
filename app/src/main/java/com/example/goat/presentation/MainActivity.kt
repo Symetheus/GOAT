@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.goat.presentation.auth.AuthScreen
 import com.example.goat.presentation.home.HomeScreen
 import com.example.goat.presentation.player.ListAllPlayer
+import com.example.goat.presentation.player.RankingWithBadge
 import com.example.goat.presentation.profile.UserModify
 import com.example.goat.presentation.profile.UserProfile
 import com.example.goat.presentation.quiz.ChallengeScreen
@@ -68,6 +69,9 @@ fun MainScreen() {
         }
         composable(route = Screen.ChallengeScreen.route) {
             ChallengeScreen(navController = navController)
+        }
+        composable(route = Screen.RankingWithBadgeScreen.route) {
+            RankingWithBadge(navController = navController)
         }
     }
 }

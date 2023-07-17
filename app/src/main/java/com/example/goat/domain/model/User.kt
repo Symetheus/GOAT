@@ -7,4 +7,5 @@ data class User(
     val photo: String?,
     val firstname: String?,
     val lastname: String?,
+    val badges: Number?,
 )

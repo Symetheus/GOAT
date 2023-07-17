@@ -5,4 +5,6 @@ import com.example.goat.domain.model.User
 interface UserRepository {
 
     suspend fun getAllUserFirestore() : List<User>
+
+    suspend fun userRankingWithBadge() : List<User>
 }

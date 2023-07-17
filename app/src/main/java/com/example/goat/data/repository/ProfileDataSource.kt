@@ -39,6 +39,7 @@ class ProfileDataSource @Inject constructor(
                 val photo = document.getString("photo")
                 val firstname = document.getString("firstname")
                 val lastname = document.getString("lastname")
+                val badges = document.getDouble("badges")
 
                 return User(
                     authenticationRepository.getCurrentUser()!!.id,
@@ -46,7 +47,8 @@ class ProfileDataSource @Inject constructor(
                     pseudo ?: "",
                     photo ?: "",
                     firstname ?: "",
-                    lastname ?: ""
+                    lastname ?: "",
+                    badges ?: 0,
                 )
             } else {
                 Timber.tag("Empty").d("No such document")
@@ -69,6 +71,7 @@ class ProfileDataSource @Inject constructor(
             val photo = document.getString("photo")
             val firstname = document.getString("firstname")
             val lastname = document.getString("lastname")
+            val badges = document.getDouble("badges")
 
             return User(
                 authenticationRepository.getCurrentUser()!!.id,
@@ -76,12 +79,13 @@ class ProfileDataSource @Inject constructor(
                 pseudo ?: "",
                 photo ?: "",
                 firstname ?: "",
-                lastname ?: ""
+                lastname ?: "",
+                badges ?: 0,
             )
         } else {
             Timber.tag("Empty").d("No such document")
         }
-        return User(authenticationRepository.getCurrentUser()!!.id, "", "", "", "", "")
+        return User(authenticationRepository.getCurrentUser()!!.id, "", "", "", "", "", 0)
     }
 
     override suspend fun stockImageFirebaseStorage(imageUri: Uri): String {
