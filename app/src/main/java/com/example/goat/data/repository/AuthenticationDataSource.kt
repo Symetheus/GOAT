@@ -63,5 +63,5 @@ fun FirebaseUser.toUser(): User {
         firstname = null,
         lastname = null,
         badges = 0,
-    )
+        )
 }
