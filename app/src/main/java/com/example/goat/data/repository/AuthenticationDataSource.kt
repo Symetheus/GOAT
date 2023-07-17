@@ -35,6 +35,7 @@ class AuthenticationDataSource @Inject constructor(
                 photo = "",
                 firstname = "",
                 lastname = "",
+                badges = 0,
             )
             firestore.collection("users")
                 .document(user.id)
@@ -61,5 +62,6 @@ fun FirebaseUser.toUser(): User {
         photo = photoUrl.toString(),
         firstname = null,
         lastname = null,
+        badges = 0,
     )
 }

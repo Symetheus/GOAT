@@ -183,6 +183,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                     lastname = textLastname.text,
                     name = "",
                     photo = imageUrl,
+                    badges = uiState.value.user?.badges
                 )
                 viewModel.modifyUserUC(UserUpdated)
                 navController.popBackStack()
