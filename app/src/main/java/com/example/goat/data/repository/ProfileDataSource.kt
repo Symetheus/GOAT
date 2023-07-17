@@ -89,14 +89,14 @@ class ProfileDataSource @Inject constructor(
     }
 
     override suspend fun stockImageFirebaseStorage(imageUri: Uri): String {
-            val referenceRoot = firebaseStorage.reference
-            val uniqueFilename = UUID.randomUUID().toString()
-            val referenceDirImages = referenceRoot.child("images")
-            val referenceImageToUpload = referenceDirImages.child(uniqueFilename)
+        val referenceRoot = firebaseStorage.reference
+        val uniqueFilename = UUID.randomUUID().toString()
+        val referenceDirImages = referenceRoot.child("images")
+        val referenceImageToUpload = referenceDirImages.child(uniqueFilename)
 
-            referenceImageToUpload.putFile(imageUri).await()
-            val downloadUrl = referenceImageToUpload.downloadUrl.await().toString()
-            return downloadUrl
+        referenceImageToUpload.putFile(imageUri).await()
+        val downloadUrl = referenceImageToUpload.downloadUrl.await().toString()
+        return downloadUrl
     }
 
 }

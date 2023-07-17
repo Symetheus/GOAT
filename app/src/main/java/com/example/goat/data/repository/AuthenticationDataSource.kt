@@ -16,8 +16,7 @@ class AuthenticationDataSource @Inject constructor(
     AuthenticationRepository {
     override suspend fun signIn(email: String, password: String): User? {
         auth.signInWithEmailAndPassword(email, password).await().let {
-            val user =  it.user?.toUser()
-            return user
+            return it.user?.toUser()
         }
     }
 
