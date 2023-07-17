@@ -24,6 +24,7 @@ class UserDataSource @Inject constructor(
             val photo = document.getString("photo")
             val firstname = document.getString("firstname")
             val lastname = document.getString("lastname")
+            val badges = document.getDouble("badges")
 
             val user = User(
                 authenticationRepository.getCurrentUser()!!.id,
@@ -31,11 +32,42 @@ class UserDataSource @Inject constructor(
                 pseudo ?: "",
                 photo ?: "",
                 firstname ?: "",
-                lastname ?: ""
+                lastname ?: "",
+                badges ?: 0,
             )
 
             listAllUsers.add(user)
         }
+        return listAllUsers
+    }
+
+    override suspend fun userRankingWithBadge(): List<User> {
+        val listAllUsers: MutableList<User> = mutableListOf()
+        val docRef =
+            firestore.collection("users")
+        val querySnapshot = docRef.get().await()
+
+        for (document in querySnapshot.documents) {
+            val email = document.getString("email")
+            val pseudo = document.getString("pseudo")
+            val photo = document.getString("photo")
+            val firstname = document.getString("firstname")
+            val lastname = document.getString("lastname")
+            val badges = document.getDouble("badges")
+
+            val user = User(
+                authenticationRepository.getCurrentUser()!!.id,
+                email ?: "",
+                pseudo ?: "",
+                photo ?: "",
+                firstname ?: "",
+                lastname ?: "",
+                badges ?: 0,
+            )
+
+            listAllUsers.add(user)
+        }
+        listAllUsers.sortByDescending { it.badges?.toDouble() ?: 0.0 }
         return listAllUsers
     }
 }

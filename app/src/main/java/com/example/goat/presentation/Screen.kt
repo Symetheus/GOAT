@@ -9,4 +9,5 @@ sealed class Screen(val route: String) {
     object DailyQuizScreen: Screen("daly_quiz")
     object QuizScreen: Screen("quiz")
     object ChallengeScreen: Screen("challenge")
+    object RankingWithBadgeScreen: Screen("ranking_with_badge")
 }

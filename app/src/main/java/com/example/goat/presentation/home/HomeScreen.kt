@@ -80,6 +80,15 @@ fun HomeScreen(
                         text = "Create a challenge",
                     )
                 }
+
+                Button(
+                    onClick = { navController.navigate(Screen.RankingWithBadgeScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "See ranking of players with badge",
+                    )
+                }
             }
         }
     )

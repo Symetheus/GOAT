@@ -34,7 +34,7 @@ import androidx.navigation.NavController
 @Composable
 fun ListAllPlayer(
     navController: NavController,
-    viewModel: UserViewModel = hiltViewModel(),
+    viewModel: PlayerViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
     val itemsPerPage = 8
