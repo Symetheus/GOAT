@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -61,62 +62,76 @@ fun RankingWithBadge(
                     .height(70.dp)
                     .padding(bottom = 10.dp)
             )
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.Start
-            ) {
-                uiState.value.listUser?.let { userList ->
-                    val filteredList = if (viewModel.searchTerm.value.isNotEmpty()) {
-                        userList.filter { user ->
-                            val fullName = "${user.lastname} ${user.firstname}"
-                            fullName.contains(viewModel.searchTerm.value, ignoreCase = true)
+            if (uiState.value.isLoading) {
+                LoadingSpinner()
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    uiState.value.listUser?.let { userList ->
+                        val filteredList = if (viewModel.searchTerm.value.isNotEmpty()) {
+                            userList.filter { user ->
+                                val fullName = "${user.lastname} ${user.firstname}"
+                                fullName.contains(viewModel.searchTerm.value, ignoreCase = true)
+                            }
+                        } else {
+                            userList
                         }
-                    } else {
-                        userList
-                    }
-                    items(filteredList.size) { index ->
-                        val user = filteredList[index]
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
-                                .padding(all = 5.dp)
-                        ) {
-                            Row(
+                        items(filteredList.size) { index ->
+                            val user = filteredList[index]
+                            Column(
                                 modifier = Modifier
-                                    .padding(start = 5.dp),
+                                    .fillMaxWidth()
+                                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                                    .padding(all = 5.dp)
                             ) {
-                                if (userList == filteredList) {
+                                Row(
+                                    modifier = Modifier
+                                        .padding(start = 5.dp),
+                                ) {
+                                    if (userList == filteredList) {
+                                        Text(
+                                            text = "${index + 1}",
+                                            color = Color.Black,
+                                            fontSize = 15.sp,
+                                            modifier = Modifier
+                                                .weight(1f)
+                                                .padding(start = 20.dp)
+                                        )
+                                    }
                                     Text(
-                                        text = "${index + 1}",
+                                        text = "${user.lastname} ${user.firstname}",
                                         color = Color.Black,
                                         fontSize = 15.sp,
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .padding(start = 20.dp)
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(3f)
+                                    )
+                                    Text(
+                                        text = "${user.badges?.toInt()}",
+                                        color = Color.Black,
+                                        fontSize = 17.sp,
+                                        modifier = Modifier.weight(1f)  //Utilise 1/4 de l'espace disponible
                                     )
                                 }
-                                Text(
-                                    text = "${user.lastname} ${user.firstname}",
-                                    color = Color.Black,
-                                    fontSize = 15.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                    modifier = Modifier.weight(3f)
-                                )
-                                Text(
-                                    text = "${user.badges?.toInt()}",
-                                    color = Color.Black,
-                                    fontSize = 17.sp,
-                                    modifier = Modifier.weight(1f)  //Utilise 1/4 de l'espace disponible
-                                )
                             }
+                            Spacer(modifier = Modifier.height(15.dp))
                         }
-                        Spacer(modifier = Modifier.height(15.dp))
                     }
                 }
             }
         }
     }
 
+}
+
+@Composable
+fun LoadingSpinner() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()
+    ) {
+        CircularProgressIndicator()
+    }
 }
