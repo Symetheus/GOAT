@@ -19,15 +19,19 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.goat.utils.StoreUser
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +39,11 @@ fun RankingWithBadge(
     navController: NavController, viewModel: PlayerViewModel = hiltViewModel(),
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+
+    val storeUser = StoreUser(LocalContext.current)
+    val loggedUserEmailState =
+        rememberUpdatedState(storeUser.getEmail.collectAsState(initial = "").value)
+    val loggedUserEmail = loggedUserEmailState.value ?: ""
 
     LaunchedEffect(Unit) {
         viewModel.userRankingWithBadgeUC()
@@ -80,10 +89,14 @@ fun RankingWithBadge(
                         }
                         items(filteredList.size) { index ->
                             val user = filteredList[index]
+                            val backgroundColor =
+                                if (user.email == loggedUserEmail) Color(0xFF304656) else Color.LightGray
+                            val textColor =
+                                if (user.email == loggedUserEmail) Color.White else Color.Black
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                                    .background(backgroundColor, shape = RoundedCornerShape(8.dp))
                                     .padding(all = 5.dp)
                             ) {
                                 Row(
@@ -93,7 +106,7 @@ fun RankingWithBadge(
                                     if (userList == filteredList) {
                                         Text(
                                             text = "${index + 1}",
-                                            color = Color.Black,
+                                            color = textColor,
                                             fontSize = 15.sp,
                                             modifier = Modifier
                                                 .weight(1f)
@@ -102,7 +115,7 @@ fun RankingWithBadge(
                                     }
                                     Text(
                                         text = "${user.lastname} ${user.firstname}",
-                                        color = Color.Black,
+                                        color = textColor,
                                         fontSize = 15.sp,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
@@ -110,7 +123,7 @@ fun RankingWithBadge(
                                     )
                                     Text(
                                         text = "${user.badges?.toInt()}",
-                                        color = Color.Black,
+                                        color = textColor,
                                         fontSize = 17.sp,
                                         modifier = Modifier.weight(1f)  //Utilise 1/4 de l'espace disponible
                                     )
