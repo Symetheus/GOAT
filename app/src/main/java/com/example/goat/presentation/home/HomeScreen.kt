@@ -89,6 +89,15 @@ fun HomeScreen(
                 }
 
                 Button(
+                    onClick = { navController.navigate(Screen.ContributionQuizScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Contribution Quiz",
+                    )
+                }
+
+                Button(
                     onClick = { navController.navigate(Screen.ChallengeScreen.route) },
                     modifier = Modifier.fillMaxWidth()
                 ) {
