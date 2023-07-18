@@ -12,7 +12,7 @@ class CreateUserFirestoreUC @Inject constructor(private val authRepository: Auth
             authRepository.createUserFirestore()
             emit(Resource.Success(Unit))
         } catch (e: Exception) {
-            emit(Resource.Error(message = "Une erreur est survenue lors de la creéation du User dans Firestore"))
+            emit(Resource.Error(message = "Une erreur est survenue lors de la création du User dans Firestore"))
         }
     }
 }
