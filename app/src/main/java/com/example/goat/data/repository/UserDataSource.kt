@@ -3,8 +3,10 @@ package com.example.goat.data.repository
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.UserRepository
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
+import timber.log.Timber
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
@@ -69,5 +71,21 @@ class UserDataSource @Inject constructor(
         }
         listAllUsers.sortByDescending { it.badges?.toDouble() ?: 0.0 }
         return listAllUsers
+    }
+
+    override suspend fun addBadgeForUser(user: User): User? {
+        val docRef =
+            firestore.collection("users").document(user.id)
+        val documentSnapshot = docRef.get().await()
+        if (documentSnapshot.exists()) {
+            val currentBadges = documentSnapshot.getLong("badges") ?: 0
+            val newBadges = currentBadges + 2
+
+            docRef.update("badges", newBadges)
+            val updatedUser = user.copy(badges = newBadges)
+
+            return updatedUser
+        }
+        return null
     }
 }
