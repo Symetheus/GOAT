@@ -3,10 +3,12 @@ package com.example.goat.di
 import com.example.goat.common.BASE_URL
 import com.example.goat.data.remote.api.GotqApi
 import com.example.goat.data.repository.AuthenticationDataSource
+import com.example.goat.data.repository.ContributionQuizDataSource
 import com.example.goat.data.repository.GotqDataSource
 import com.example.goat.data.repository.ProfileDataSource
 import com.example.goat.data.repository.UserDataSource
 import com.example.goat.domain.repository.AuthenticationRepository
+import com.example.goat.domain.repository.ContributionQuizRepository
 import com.example.goat.domain.repository.GotqRepository
 import com.example.goat.domain.repository.ProfileRepository
 import com.example.goat.domain.repository.UserRepository
@@ -80,5 +82,11 @@ object AppModule {
     @Singleton
     fun provideUserRepository(firestore: FirebaseFirestore, authenticationRepository: AuthenticationRepository): UserRepository {
         return UserDataSource(firestore,authenticationRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideContributionQuizRepository(firestore: FirebaseFirestore): ContributionQuizRepository {
+        return ContributionQuizDataSource(firestore)
     }
 }
