@@ -7,4 +7,6 @@ interface UserRepository {
     suspend fun getAllUserFirestore() : List<User>
 
     suspend fun userRankingWithBadge() : List<User>
+
+    suspend fun addBadgeForUser(user : User): User?
 }
