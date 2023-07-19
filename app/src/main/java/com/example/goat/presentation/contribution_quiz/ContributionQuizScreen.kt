@@ -1,124 +1,119 @@
 package com.example.goat.presentation.contribution_quiz
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material.DropdownMenuItem
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.goat.domain.model.Character
-import com.example.goat.domain.model.ContributionQuiz
 import com.example.goat.presentation.quiz.QuizViewModel
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContributionQuizScreen(
     navController: NavController,
     viewModel: ContributionQuizViewModel = hiltViewModel(),
-    quizViewModel: QuizViewModel = hiltViewModel(),
 ) {
-    val citationTextState = remember { mutableStateOf("") }
-    var selectedCharacter by remember { mutableStateOf("") }
-    val quizAddedState by viewModel.quizAdded.collectAsState()
-
-    var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
+    val uiState = viewModel.uiState.collectAsStateWithLifecycle()
+    val currentQuestionIndex = remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
-        listCharacter = quizViewModel.generateCharacters2()
+        //viewModel.onEventChanged(QuizEvent.GetSeveralQuotes)
+        viewModel.getQuiz()
     }
 
-    LaunchedEffect(quizAddedState) {
-        if (quizAddedState) {
-            navController.popBackStack()
-        }
+    if (uiState.value.isFinished) {
+        val score = uiState.value.score
+        AlertDialog(
+            title = {
+                if (score >= 7) {
+                    Text(text = "Congratulations!")
+                } else {
+                    Text(text = "You can do better!")
+                }
+            },
+            text = {
+                Text("Score: $score/10")
+            },
+            confirmButton = {
+                Button(onClick = {
+                    navController.popBackStack()
+                }) {
+                    Text("Continue")
+                }
+            },
+            onDismissRequest = {},
+            dismissButton = null,
+        )
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .wrapContentHeight()
-    ) {
-        Text(
-            text = "Ecrivez votre quiz !",
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            color = Color(0xFF304656),
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = citationTextState.value,
-            onValueChange = { citationTextState.value = it },
-            label = { Text("Citation") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Box(
-            modifier = Modifier.align(Alignment.CenterHorizontally),
-            contentAlignment = Alignment.Center
-        ) {
-            var expanded by remember { mutableStateOf(false) }
-            Text(
-                text = "Personnage :\n$selectedCharacter",
-                modifier = Modifier
-                    .clickable { expanded = true }
-                    .padding(vertical = 8.dp)
+    when {
+        uiState.value.isLoading -> {
+            CircularProgressIndicator(
+                color = MaterialTheme.colorScheme.primary,
+                strokeWidth = 4.dp,
+                modifier = Modifier.size(48.dp)
             )
-            if (expanded) {
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false },
-                ) {
-                    listCharacter.forEach { character ->
-                        DropdownMenuItem(
-                            onClick = {
-                                selectedCharacter = character.name
-                                expanded = false
+        }
+
+        uiState.value.error.isNotBlank() -> {
+            Text(text = uiState.value.error, color = MaterialTheme.colorScheme.error)
+        }
+
+        uiState.value.listQuiz != null -> {
+            val quotes = uiState.value.listQuiz
+            val index = currentQuestionIndex.value
+            Scaffold(
+                content = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(16.dp),
+                    ) {
+                        Text(text = "Question ${index + 1}/10")
+                        Text(text = quotes!![index].citation)
+
+                        quotes[index].character.forEachIndexed { index, answer ->
+                            Text(text = quotes[index].character)
+                            Button(onClick = {
+                                viewModel.onEventChanged(
+                                    QuizEvent.OnSelectAnswer(
+                                        currentQuestionIndex,
+                                        index
+                                    )
+                                )
+                                // currentQuestionIndex.value = index + 1
+                            }) {
+
                             }
-                        ) {
-                            Text(text = character.name, style = MaterialTheme.typography.bodyMedium)
+                        }
+
+                        Row {
+                            Text(text = "1")
+                            Text(text = "2")
+                            Text(text = "3")
+                            Text(text = "4")
                         }
                     }
                 }
-            }
-        }
-        Spacer(modifier = Modifier.height(32.dp))
-        Button(
-            onClick = {
-                val quiz = ContributionQuiz(
-                    citation = citationTextState.value,
-                    character = selectedCharacter,
-                )
-                viewModel.addQuizUC(quiz = quiz)
-            },
-            modifier = Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            Text(text = "Enregistrer mon quiz")
+            )
         }
     }
 }
