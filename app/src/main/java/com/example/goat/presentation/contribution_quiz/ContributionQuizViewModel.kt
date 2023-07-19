@@ -53,4 +53,36 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
             }
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
+
+    fun getQuiz() {
+        interactor.getQuizUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        listQuiz = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            listQuiz = resource.data,
+                            error = "",
+                        )
+                    }
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        listQuiz = null,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
 }
