@@ -1,13 +1,19 @@
 package com.example.goat.presentation.contribution_quiz
 
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material3.Button
+import androidx.compose.material3.DropdownMenu
+
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -18,12 +24,12 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.goat.domain.model.ContributionQuiz
 
@@ -34,7 +40,7 @@ fun ContributionQuizScreen(
     viewModel: ContributionQuizViewModel = hiltViewModel(),
 ) {
     val citationTextState = remember { mutableStateOf("") }
-    val characterTextState = remember { mutableStateOf("") }
+    var selectedCharacter by remember { mutableStateOf("") }
     val quizAddedState by viewModel.quizAdded.collectAsState()
 
     LaunchedEffect(quizAddedState) {
@@ -64,19 +70,41 @@ fun ContributionQuizScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        TextField(
-            value = characterTextState.value,
-            onValueChange = { characterTextState.value = it },
-            label = { Text("Character") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
+        Box {
+            var expanded by remember { mutableStateOf(false) }
+            Text(
+                text = "Personnage : $selectedCharacter",
+                modifier = Modifier
+                    .clickable { expanded = true }
+                    .padding(vertical = 8.dp)
+            )
+            if (expanded) {
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false },
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                ) {
+                    val characters = listOf("Character 1", "Character 2", "Character 3")
+                    characters.forEach { character ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedCharacter = character
+                                expanded = false
+                            }
+                        ) {
+                            Text(text = character, style = MaterialTheme.typography.bodyMedium)
+                        }
+                    }
+                }
+            }
+        }
         Spacer(modifier = Modifier.height(32.dp))
         Button(
             onClick = {
                 val quiz = ContributionQuiz(
                     citation = citationTextState.value,
-                    character = characterTextState.value,
+                    character = selectedCharacter,
                 )
                 viewModel.addQuizUC(quiz = quiz)
             },
