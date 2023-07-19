@@ -21,38 +21,6 @@ class QuizViewModel @Inject constructor(private val interactor: GotqInteractor) 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    suspend fun generateCharacters() {
-        interactor.getCharactersUC().onEach { resource ->
-            when (resource) {
-                is Resource.Loading -> _uiState.update {
-                    it.copy(
-                        isLoading = true,
-                        listCharacter = null,
-                        error = "",
-                    )
-                }
-
-                is Resource.Success -> {
-                    _uiState.update {
-                        it.copy(
-                            isLoading = false,
-                            listCharacter = resource.data,
-                            error = "",
-                        )
-                    }
-                }
-
-                is Resource.Error -> _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        listCharacter = null,
-                        error = resource.message ?: "Something happened",
-                    )
-                }
-            }
-        }.launchIn(viewModelScope.plus(Dispatchers.IO))
-    }
-
     suspend fun generateCharacters2(): List<Character> =
         interactor.getCharactersUC.invokeCharacters()
 

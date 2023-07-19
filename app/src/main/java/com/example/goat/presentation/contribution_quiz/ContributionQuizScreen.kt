@@ -48,7 +48,7 @@ fun ContributionQuizScreen(
 
     var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
 
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         listCharacter = quizViewModel.generateCharacters2()
     }
 
@@ -79,10 +79,13 @@ fun ContributionQuizScreen(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
-        Box {
+        Box(
+            modifier = Modifier.align(Alignment.CenterHorizontally),
+            contentAlignment = Alignment.Center
+        ) {
             var expanded by remember { mutableStateOf(false) }
             Text(
-                text = "Personnage : $selectedCharacter",
+                text = "Personnage :\n$selectedCharacter",
                 modifier = Modifier
                     .clickable { expanded = true }
                     .padding(vertical = 8.dp)
@@ -91,8 +94,6 @@ fun ContributionQuizScreen(
                 DropdownMenu(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
-                    modifier = Modifier
-                        .align(Alignment.BottomEnd)
                 ) {
                     listCharacter.forEach { character ->
                         DropdownMenuItem(
