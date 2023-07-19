@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material.DropdownMenuItem
@@ -30,18 +29,28 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.goat.domain.model.Character
 import com.example.goat.domain.model.ContributionQuiz
+import com.example.goat.presentation.quiz.QuizViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContributionQuizScreen(
     navController: NavController,
     viewModel: ContributionQuizViewModel = hiltViewModel(),
+    quizViewModel: QuizViewModel = hiltViewModel(),
 ) {
     val citationTextState = remember { mutableStateOf("") }
     var selectedCharacter by remember { mutableStateOf("") }
     val quizAddedState by viewModel.quizAdded.collectAsState()
+
+    var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
+
+    LaunchedEffect(Unit){
+        listCharacter = quizViewModel.generateCharacters2()
+    }
 
     LaunchedEffect(quizAddedState) {
         if (quizAddedState) {
@@ -83,17 +92,16 @@ fun ContributionQuizScreen(
                     expanded = expanded,
                     onDismissRequest = { expanded = false },
                     modifier = Modifier
-                        .align(Alignment.BottomStart)
+                        .align(Alignment.BottomEnd)
                 ) {
-                    val characters = listOf("Character 1", "Character 2", "Character 3")
-                    characters.forEach { character ->
+                    listCharacter.forEach { character ->
                         DropdownMenuItem(
                             onClick = {
-                                selectedCharacter = character
+                                selectedCharacter = character.name
                                 expanded = false
                             }
                         ) {
-                            Text(text = character, style = MaterialTheme.typography.bodyMedium)
+                            Text(text = character.name, style = MaterialTheme.typography.bodyMedium)
                         }
                     }
                 }
