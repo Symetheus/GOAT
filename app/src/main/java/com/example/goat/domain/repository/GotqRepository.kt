@@ -1,5 +1,6 @@
 package com.example.goat.domain.repository
 
+import com.example.goat.domain.model.Character
 import com.example.goat.domain.model.Quote
 
 interface GotqRepository {
@@ -13,4 +14,5 @@ interface GotqRepository {
     // Houses
 
     // Characters
+    suspend fun getCharactersList(): List<Character>
 }
