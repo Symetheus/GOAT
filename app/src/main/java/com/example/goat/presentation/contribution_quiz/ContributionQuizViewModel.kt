@@ -1,5 +1,6 @@
 package com.example.goat.presentation.contribution_quiz
 
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
@@ -7,7 +8,7 @@ import com.example.goat.domain.interactor.contribution_quiz.ContributionQuizInte
 import com.example.goat.domain.model.Answer
 import com.example.goat.domain.model.ContributionQuiz
 import com.example.goat.domain.model.toAnswer
-import com.example.goat.presentation.auth.UiState
+import com.example.goat.presentation.contribution_quiz.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -62,7 +63,7 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
                 is Resource.Loading -> _uiState.update {
                     it.copy(
                         isLoading = true,
-                        listQuiz = null,
+                        quotes = null,
                         error = "",
                     )
                 }
@@ -85,7 +86,7 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
                 is Resource.Error -> _uiState.update {
                     it.copy(
                         isLoading = false,
-                        listQuiz = null,
+                        quotes = null,
                         error = resource.message ?: "Something happened",
                     )
                 }
@@ -97,5 +98,54 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
         val characters = interactor.getCharactersUC.invokeCharacters()
 
         return interactor.generateQuizAnswersUC(characters, trueAnswer)
+    }
+
+    fun onEventChanged(event: ContributionQuizEvent) {
+        when (event) {
+            ContributionQuizEvent.GetQuiz -> getQuiz()
+            is ContributionQuizEvent.OnSelectAnswer -> handleAnswerSelection(
+                event.currentQuestionIndex,
+                event.selectedAnswerIndex
+            )
+        }
+    }
+
+    private fun handleAnswerSelection(
+        currentQuestionIndex: MutableState<Int>,
+        selectedAnswerIndex: Int
+    ) {
+        val quizQuestions = uiState.value.quotes!!
+
+        // Check if the selected answer is correct
+        val isCorrectAnswer =
+            selectedAnswerIndex == quizQuestions[currentQuestionIndex.value].answers?.indexOfFirst { it.veracity }
+
+        // update UI accordingly the answer
+        if (isCorrectAnswer) {
+            println("correct answer")
+            uiState.let {
+                _uiState.update {
+                    it.copy(
+                        score = it.score + 1,
+                    )
+                }
+            }
+        } else {
+            println("wrong answer")
+        }
+
+        // Increment the question index
+        if (currentQuestionIndex.value < quizQuestions.size - 1) {
+            currentQuestionIndex.value++
+        } else {
+            println("finished !!")
+            uiState.let {
+                _uiState.update {
+                    it.copy(
+                        isFinished = true,
+                    )
+                }
+            }
+        }
     }
 }

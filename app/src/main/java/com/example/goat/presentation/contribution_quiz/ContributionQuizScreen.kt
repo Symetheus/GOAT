@@ -22,9 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.goat.presentation.quiz.QuizViewModel
 
-/*
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,8 +34,7 @@ fun ContributionQuizScreen(
     val currentQuestionIndex = remember { mutableStateOf(0) }
 
     LaunchedEffect(Unit) {
-        //viewModel.onEventChanged(QuizEvent.GetSeveralQuotes)
-        viewModel.getQuiz()
+        viewModel.onEventChanged(ContributionQuizEvent.GetQuiz)
     }
 
     if (uiState.value.isFinished) {
@@ -51,7 +48,7 @@ fun ContributionQuizScreen(
                 }
             },
             text = {
-                Text("Score: $score/10")
+                Text("Score: $score/${uiState.value.quotes?.size}")
             },
             confirmButton = {
                 Button(onClick = {
@@ -78,9 +75,10 @@ fun ContributionQuizScreen(
             Text(text = uiState.value.error, color = MaterialTheme.colorScheme.error)
         }
 
-        uiState.value.listQuiz != null -> {
-            val quotes = uiState.value.listQuiz
+        uiState.value.quotes != null -> {
+            val quotes = uiState.value.quotes!!
             val index = currentQuestionIndex.value
+
             Scaffold(
                 content = {
                     Column(
@@ -88,14 +86,14 @@ fun ContributionQuizScreen(
                             .fillMaxSize()
                             .padding(16.dp),
                     ) {
-                        Text(text = "Question ${index + 1}/10")
-                        Text(text = quotes!![index].citation)
+                        Text(text = "Question ${index + 1}/${quotes.size}")
+                        Text(text = quotes[index].quote)
 
-                        quotes[index].character.forEachIndexed { index, answer ->
-                            Text(text = quotes[index].character)
+                        quotes[index].answers?.forEachIndexed { index, answer ->
+                            Text(text = answer.name)
                             Button(onClick = {
                                 viewModel.onEventChanged(
-                                    QuizEvent.OnSelectAnswer(
+                                    ContributionQuizEvent.OnSelectAnswer(
                                         currentQuestionIndex,
                                         index
                                     )
@@ -118,4 +116,3 @@ fun ContributionQuizScreen(
         }
     }
 }
- */
