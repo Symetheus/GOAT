@@ -24,6 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.goat.presentation.quiz.QuizViewModel
 
+/*
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -117,3 +118,4 @@ fun ContributionQuizScreen(
         }
     }
 }
+ */
