@@ -112,7 +112,7 @@ fun AddContributionQuizScreen(
         Button(
             onClick = {
                 val quiz = ContributionQuiz(
-                    citation = citationTextState.value,
+                    sentence = citationTextState.value,
                     character = selectedCharacter,
                     slug = selectedSlug,
                 )
