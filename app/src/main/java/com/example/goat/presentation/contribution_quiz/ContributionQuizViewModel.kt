@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.contribution_quiz.ContributionQuizInteractor
+import com.example.goat.domain.model.Answer
 import com.example.goat.domain.model.ContributionQuiz
+import com.example.goat.domain.model.toAnswer
 import com.example.goat.presentation.auth.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -66,10 +68,15 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
                 }
 
                 is Resource.Success -> {
+                    val data = resource.data
+                    data?.forEach {
+                        it.answers = generatesAnswers(it.toAnswer().copy(veracity = true))
+                    }
+
                     _uiState.update {
                         it.copy(
                             isLoading = false,
-                            listQuiz = resource.data,
+                            quotes = data,
                             error = "",
                         )
                     }
@@ -84,5 +91,11 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
                 }
             }
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
+
+    private suspend fun generatesAnswers(trueAnswer: Answer): List<Answer> {
+        val characters = interactor.getCharactersUC.invokeCharacters()
+
+        return interactor.generateQuizAnswersUC(characters, trueAnswer)
     }
 }
