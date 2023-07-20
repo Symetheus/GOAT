@@ -41,7 +41,8 @@ fun ContributionQuizScreen(
         val score = uiState.value.score
         AlertDialog(
             title = {
-                if (score >= 7) {
+                val result = (uiState.value.quotes!!.size * 0.75).toInt()
+                if (score >= result) {
                     Text(text = "Congratulations!")
                 } else {
                     Text(text = "You can do better!")
