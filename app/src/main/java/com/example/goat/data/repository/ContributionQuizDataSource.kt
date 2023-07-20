@@ -1,9 +1,14 @@
 package com.example.goat.data.repository
 
+import com.example.goat.data.remote.dto.quote.ContributionQuoteDto
+import com.example.goat.data.remote.dto.quote.QuoteDto
+import com.example.goat.data.remote.dto.quote.toQuote
 import com.example.goat.domain.model.ContributionQuiz
+import com.example.goat.domain.model.Quote
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.ContributionQuizRepository
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
@@ -16,24 +21,18 @@ class ContributionQuizDataSource @Inject constructor(
             .add(quiz)
     }
 
-    override suspend fun getQuiz(): List<ContributionQuiz> {
-        val listAllQuiz: MutableList<ContributionQuiz> = mutableListOf()
+    override suspend fun getQuiz(): List<Quote> {
+        val listAllQuote: MutableList<Quote> = mutableListOf()
         val docRef =
             firestore.collection("quiz")
         val querySnapshot = docRef.get().await()
-
-        for (document in querySnapshot.documents) {
-            val citation = document.getString("citation")
-            val character = document.getString("character")
-
-            val contributionQuiz = ContributionQuiz(
-                citation ?: "",
-                character ?: "",
-            )
-
-            listAllQuiz.add(contributionQuiz)
+        querySnapshot.documents.map {
+            val dto = it.toObject(ContributionQuoteDto::class.java)
+            listAllQuote.add(dto!!.toQuote())
         }
-        return listAllQuiz
+        //SI FONCTIONNE PAS
+        //querySnapshot.documents. foreach puis dedans it.map (avec dedans dto et tout)
+        return listAllQuote
     }
 
 }

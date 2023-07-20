@@ -42,8 +42,9 @@ fun AddContributionQuizScreen(
 ) {
     val citationTextState = remember { mutableStateOf("") }
     var selectedCharacter by remember { mutableStateOf("") }
-    val quizAddedState by viewModel.quizAdded.collectAsState()
+    var selectedSlug by remember { mutableStateOf("") }
 
+    val quizAddedState by viewModel.quizAdded.collectAsState()
     var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
 
     LaunchedEffect(Unit) {
@@ -97,6 +98,7 @@ fun AddContributionQuizScreen(
                         DropdownMenuItem(
                             onClick = {
                                 selectedCharacter = character.name
+                                selectedSlug = character.slug
                                 expanded = false
                             }
                         ) {
@@ -112,6 +114,7 @@ fun AddContributionQuizScreen(
                 val quiz = ContributionQuiz(
                     citation = citationTextState.value,
                     character = selectedCharacter,
+                    slug = selectedSlug,
                 )
                 viewModel.addQuizUC(quiz = quiz)
             },
