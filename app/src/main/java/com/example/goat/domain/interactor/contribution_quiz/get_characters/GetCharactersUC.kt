@@ -1,8 +1,8 @@
-package com.example.goat.domain.interactor.gotq.get_characters
+package com.example.goat.domain.interactor.contribution_quiz.get_characters
 
 import com.example.goat.common.Resource
-import com.example.goat.domain.model.Character
 import com.example.goat.domain.repository.GotqRepository
+import com.example.goat.domain.model.Character
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject

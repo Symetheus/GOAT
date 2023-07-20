@@ -1,4 +1,4 @@
-package com.example.goat.domain.interactor.gotq.generate_quiz_answers
+package com.example.goat.domain.interactor.contribution_quiz.generate_quiz_answers
 
 import com.example.goat.domain.model.Answer
 import com.example.goat.domain.model.Character

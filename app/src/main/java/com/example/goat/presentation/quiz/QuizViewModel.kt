@@ -18,10 +18,4 @@ class QuizViewModel @Inject constructor(private val interactor: GotqInteractor) 
     suspend fun generateCharacters2(): List<Character> =
         interactor.getCharactersUC.invokeCharacters()
 
-    private suspend fun generatesAnswers(trueAnswer: Answer): List<Answer> {
-        val characters = interactor.getCharactersUC.invokeCharacters()
-
-        return interactor.generateQuizAnswersUC(characters, trueAnswer)
-    }
-
 }
