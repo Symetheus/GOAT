@@ -7,3 +7,9 @@ data class Character(
     val houseSlug: String,
     val quotes: List<String>,
 )
+
+fun Character.toAnswer() = Answer(
+    name = name,
+    slug = slug,
+    veracity = false,
+)
