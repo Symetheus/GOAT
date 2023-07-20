@@ -6,7 +6,7 @@ import com.google.firebase.firestore.IgnoreExtraProperties
 
 @IgnoreExtraProperties
 data class ContributionQuoteDto (
-    val character: String,              //ou changer avec character.name : character.slug
+    val character: String,
     val slug: String,
     val sentence: String,
 ) {
