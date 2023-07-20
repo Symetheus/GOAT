@@ -16,7 +16,7 @@ data class ContributionQuoteDto (
         return mapOf(
             "character" to character,
             "slug" to slug,
-            "citation" to sentence,
+            "sentence" to sentence,
         )
     }
 }
