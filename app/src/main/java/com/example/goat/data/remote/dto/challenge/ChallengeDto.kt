@@ -1,6 +1,5 @@
 package com.example.goat.data.remote.dto.challenge
 
-import com.example.goat.data.remote.dto.quote.QuoteDto
 import com.example.goat.domain.model.Challenge
 import com.google.firebase.firestore.Exclude
 import com.google.firebase.firestore.IgnoreExtraProperties
@@ -10,11 +9,11 @@ import java.util.Date
 data class ChallengeDto (
     val id: String,
     val status: String,
-    val quotes: List<>, // TODO: QuoteDto??
+    val quotes: List<QuoteFirestoreDto>?,
     val players: List<PlayerDto>,
     val createdAt: Date = Date(),
 ) {
-    constructor() : this("", "", emptyList(), emptyList(), Date())
+    constructor() : this("", "", null, emptyList(), Date())
     @Exclude
     fun toMap(): Map<String, Any?> {
         println("IN tomapo")
@@ -30,7 +29,7 @@ fun ChallengeDto.toChallenge(): Challenge {
     return Challenge(
         id = id,
         status = status,
-        quotes = quotes.map { it.toQuote() },
+        quotes = quotes?.map { it.toQuote() },
         players = players.map { it.toPlayer() },
         createdAt = createdAt,
         dynamicLink = null,
