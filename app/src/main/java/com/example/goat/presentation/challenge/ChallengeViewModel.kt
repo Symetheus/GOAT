@@ -1,13 +1,13 @@
 package com.example.goat.presentation.challenge
 
-import android.net.Uri
+import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.auth.AuthInteractor
 import com.example.goat.domain.interactor.challenge.ChallengeInteractor
 import com.example.goat.domain.model.Challenge
-import com.google.api.ResourceProto.resource
+import com.example.goat.domain.model.Player
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,8 +22,7 @@ import javax.inject.Inject
 class ChallengeViewModel @Inject constructor(
     private val challengeInteractor: ChallengeInteractor,
     private val authInteractor: AuthInteractor,
-) :
-    ViewModel() {
+) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
@@ -31,8 +30,14 @@ class ChallengeViewModel @Inject constructor(
         createChallenge(userId)
     }
 
-    private fun startChallenge() {
-        // launch player timer!
+    fun isAllPlayersFinished(players: List<Player>): Boolean {
+        for (player in players) {
+            if (player.status != "finished") {
+                return false
+            }
+        }
+
+        return true
     }
 
     private fun getChallengeById(id: String) {
@@ -185,10 +190,90 @@ class ChallengeViewModel @Inject constructor(
     }
 
     private fun leaveRoom(challenge: Challenge, userId: String) {
+        // TODO
         _uiState.update {
             it.copy(
                 isWaitingRoom = true
             )
+        }
+    }
+
+    private fun onSelectAnswer(
+        currentQuestionIndex: MutableState<Int>,
+        selectedAnswerIndex: Int,
+    ) {
+        val quotes = uiState.value.challenge?.quotes!!
+
+        // Check if the selected answer is correct
+        val isCorrectAnswer =
+            selectedAnswerIndex == quotes[currentQuestionIndex.value].answers?.indexOfFirst { it.veracity }
+
+        // update UI accordingly the answer
+        if (isCorrectAnswer) {
+            println("correct answer")
+            challengeInteractor.updatePlayerUC(uiState.value.challenge!!, uiState.value.user!!.id)
+                .onEach { resource ->
+                    when (resource) {
+                        is Resource.Loading -> _uiState.update {
+                            it.copy(
+                                isLoading = true,
+                                error = "",
+                            )
+                        }
+
+                        is Resource.Success -> _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                challenge = resource.data,
+                                error = "",
+                            )
+                        }
+
+                        is Resource.Error -> _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                error = resource.message ?: "Something happened",
+                            )
+                        }
+                    }
+                }.launchIn(viewModelScope.plus(Dispatchers.IO))
+
+        } else {
+            println("wrong answer")
+        }
+
+        // Increment the question index
+        if (currentQuestionIndex.value < quotes.size - 1) {
+            currentQuestionIndex.value++
+        } else {
+            println("finished !!")
+            challengeInteractor.updatePlayerStatusUC(uiState.value.challenge!!, uiState.value.user!!.id)
+                .onEach { resource ->
+                    when (resource) {
+                        is Resource.Loading -> _uiState.update {
+                            it.copy(
+                                isLoading = true,
+                                error = "",
+                            )
+                        }
+
+                        is Resource.Success -> _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                challenge = resource.data,
+                                isPlayerFinished = true,
+                                error = "",
+                            )
+                        }
+
+                        is Resource.Error -> _uiState.update {
+                            it.copy(
+                                isLoading = false,
+                                error = resource.message ?: "Something happened",
+                            )
+                        }
+                    }
+                }.launchIn(viewModelScope.plus(Dispatchers.IO))
         }
     }
 
@@ -200,6 +285,10 @@ class ChallengeViewModel @Inject constructor(
             is ChallengeEvent.CreateChallenge -> onCreate(event.userId)
             is ChallengeEvent.FillChallenge -> fillChallenge(event.challenge, event.userId)
             is ChallengeEvent.LeaveRoom -> leaveRoom(event.challenge, event.userId)
+            is ChallengeEvent.OnSelectAnswer -> onSelectAnswer(
+                event.currentQuestionIndex,
+                event.selectedAnswerIndex,
+            )
         }
     }
 }

@@ -18,19 +18,15 @@ class FillChallengeUC @Inject constructor(
 ) {
     private val quotesNumber = "10"
     operator fun invoke(challenge: Challenge, userId: String): Flow<Resource<Challenge?>> = flow {
-
-        println("Je suis dedans!")
         try {
             emit(Resource.Loading())
             val quotes = gotqRepository.getSeveralRandomQuotes(quotesNumber)
             val characters = gotqRepository.getCharactersList()
 
-            println("En cours de tri !")
             // Generate answers for each quote
             quotes.forEach {
                 it.answers = generateQuizAnswersUC(characters, it.toAnswer().copy(veracity = true))
             }
-            println("Le tri est fini ! $quotes")
 
             // Add the second player to the challenge AND the quotes
             val newChallenge = challenge.copy(
@@ -38,7 +34,6 @@ class FillChallengeUC @Inject constructor(
                 quotes = quotes,
                 players = challenge.players.plus(Player(id = userId, score = 0, status = null, timer = null))
             )
-            println("Update to started -> $newChallenge")
 
             challengeRepository.update(challenge = newChallenge)
             emit(Resource.Success(newChallenge))
