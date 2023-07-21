@@ -209,7 +209,6 @@ fun SignUpForm(
 
     Button(onClick = {
         viewModel.onEventChanged(AuthEvent.OnRegisterClicked(email, password, passwordConfirmation))
-        viewModel.createUserFirestore()
     }, modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "M'inscrire",
