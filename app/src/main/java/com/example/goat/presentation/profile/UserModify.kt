@@ -200,7 +200,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
             }
             Snackbar(
                 modifier = Modifier.padding(16.dp),
-                content = { Text("Image bien importée") },
+                content = { Text("Well-imported image") },
                 contentColor = Color.Black,
                 containerColor = Color.Green,
             )

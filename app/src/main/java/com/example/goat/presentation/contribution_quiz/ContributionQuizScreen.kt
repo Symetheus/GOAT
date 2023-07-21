@@ -1,11 +1,16 @@
 package com.example.goat.presentation.contribution_quiz
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -17,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -65,11 +71,16 @@ fun ContributionQuizScreen(
 
     when {
         uiState.value.isLoading -> {
-            CircularProgressIndicator(
-                color = MaterialTheme.colorScheme.primary,
-                strokeWidth = 4.dp,
-                modifier = Modifier.size(48.dp)
-            )
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.primary,
+                    strokeWidth = 4.dp,
+                    modifier = Modifier.size(48.dp)
+                )
+            }
         }
 
         uiState.value.error.isNotBlank() -> {
@@ -80,40 +91,48 @@ fun ContributionQuizScreen(
             val quotes = uiState.value.quotes!!
             val index = currentQuestionIndex.value
 
-            Scaffold(
-                content = {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                    ) {
-                        Text(text = "Question ${index + 1}/${quotes.size}")
-                        Text(text = quotes[index].quote)
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Scaffold(
+                    modifier = Modifier.fillMaxSize(),
+                    content = {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Top,
+                        ) {
+                            Text(text = "Question ${index + 1}/${quotes.size}", style = MaterialTheme.typography.titleSmall)
+                            Spacer(modifier = Modifier.height(15.dp))
+                            Text(text = quotes[index].quote, style = MaterialTheme.typography.titleLarge)
 
-                        quotes[index].answers?.forEachIndexed { index, answer ->
-                            Text(text = answer.name)
-                            Button(onClick = {
-                                viewModel.onEventChanged(
-                                    ContributionQuizEvent.OnSelectAnswer(
-                                        currentQuestionIndex,
-                                        index
-                                    )
-                                )
-                                // currentQuestionIndex.value = index + 1
-                            }) {
-
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.Center,
+                            ) {
+                                quotes[index].answers?.forEachIndexed { index, answer ->
+                                    Button(
+                                        onClick = {
+                                            viewModel.onEventChanged(
+                                                ContributionQuizEvent.OnSelectAnswer(
+                                                    currentQuestionIndex,
+                                                    index
+                                                )
+                                            )
+                                        }
+                                    ) {
+                                        Text(text = answer.name)
+                                    }
+                                }
                             }
                         }
-
-                        Row {
-                            Text(text = "1")
-                            Text(text = "2")
-                            Text(text = "3")
-                            Text(text = "4")
-                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
