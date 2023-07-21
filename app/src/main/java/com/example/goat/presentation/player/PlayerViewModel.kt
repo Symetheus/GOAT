@@ -1,13 +1,10 @@
 package com.example.goat.presentation.player
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.user.UserInteractor
-import com.example.goat.presentation.player.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
