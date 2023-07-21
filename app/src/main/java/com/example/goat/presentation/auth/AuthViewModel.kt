@@ -1,7 +1,6 @@
 package com.example.goat.presentation.auth
 
 import android.app.Application
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
@@ -165,33 +164,6 @@ class AuthViewModel @Inject constructor(
                     it.copy(
                         isLoading = false,
                         user = null,
-                        error = resource.message ?: "Something happened",
-                    )
-                }
-            }
-        }.launchIn(viewModelScope.plus(Dispatchers.IO))
-    }
-
-    fun createUserFirestore() {
-        interactor.createUserFirestoreUC().onEach { resource ->
-            when (resource) {
-                is Resource.Loading -> _uiState.update {
-                    it.copy(
-                        isLoading = true,
-                        error = "",
-                    )
-                }
-
-                is Resource.Success -> _uiState.update {
-                    it.copy(
-                        isLoading = false,
-                        error = "",
-                    )
-                }
-
-                is Resource.Error -> _uiState.update {
-                    it.copy(
-                        isLoading = false,
                         error = resource.message ?: "Something happened",
                     )
                 }
