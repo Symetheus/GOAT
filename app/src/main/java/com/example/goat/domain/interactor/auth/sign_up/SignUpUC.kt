@@ -27,6 +27,7 @@ class SignUpUC @Inject constructor(private val authRepository: AuthenticationRep
         try {
             emit(Resource.Loading())
             val user = authRepository.signUp(email, password)
+            authRepository.createUserFirestore()
             emit(Resource.Success(user))
         } catch (e: Exception) {
             emit(Resource.Error(message = "Error with {${e.localizedMessage}}"))
