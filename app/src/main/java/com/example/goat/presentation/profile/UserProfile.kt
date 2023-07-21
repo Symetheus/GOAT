@@ -82,7 +82,7 @@ fun UserProfile(
             onClick = { navController.navigate(Screen.UserModify.route) },
         ) {
             Text(
-                text = "Modifier mon profil",
+                text = "Modify my profile",
             )
         }
         Spacer(modifier = Modifier.height(5.dp))
@@ -90,7 +90,7 @@ fun UserProfile(
             onClick = { navController.navigate(Screen.ListAllPlayer.route) },
         ) {
             Text(
-                text = "Voir la liste des joueurs",
+                text = "See the list of players",
             )
         }
 
@@ -102,7 +102,7 @@ fun UserProfile(
             },
         ) {
             Text(
-                text = "Se déconnecter",
+                text = "Logout",
             )
         }
     }

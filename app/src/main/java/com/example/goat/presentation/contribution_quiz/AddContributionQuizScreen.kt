@@ -48,7 +48,7 @@ fun AddContributionQuizScreen(
     var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
 
     LaunchedEffect(Unit) {
-        listCharacter = quizViewModel.generateCharacters2()
+        listCharacter = quizViewModel.generateCharacters()
     }
 
     LaunchedEffect(quizAddedState) {
@@ -64,7 +64,7 @@ fun AddContributionQuizScreen(
             .wrapContentHeight()
     ) {
         Text(
-            text = "Ecrivez votre quiz !",
+            text = "Write your quiz !",
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.align(Alignment.CenterHorizontally),
             color = Color(0xFF304656),
@@ -73,7 +73,7 @@ fun AddContributionQuizScreen(
         TextField(
             value = citationTextState.value,
             onValueChange = { citationTextState.value = it },
-            label = { Text("Citation") },
+            label = { Text("Quote") },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
@@ -84,7 +84,7 @@ fun AddContributionQuizScreen(
         ) {
             var expanded by remember { mutableStateOf(false) }
             Text(
-                text = "Personnage :\n$selectedCharacter",
+                text = "Character :\n$selectedCharacter",
                 modifier = Modifier
                     .clickable { expanded = true }
                     .padding(vertical = 8.dp)
@@ -120,7 +120,7 @@ fun AddContributionQuizScreen(
             },
             modifier = Modifier.align(Alignment.CenterHorizontally)
         ) {
-            Text(text = "Enregistrer mon quiz")
+            Text(text = "Save my quiz")
         }
     }
 }

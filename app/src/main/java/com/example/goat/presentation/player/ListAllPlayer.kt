@@ -62,7 +62,7 @@ fun ListAllPlayer(
 
         ) {
             Text(
-                text = "Liste des joueurs", style = MaterialTheme.typography.titleLarge
+                text = "Players list", style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(25.dp))
             LazyColumn(
@@ -117,7 +117,7 @@ fun ListAllPlayer(
                     modifier = Modifier
                         .padding(bottom = 16.dp, end = 8.dp)
                 ) {
-                    Text(text = "Page précédente")
+                    Text(text = "Previous page")
                 }
             }
             if (userListSize > itemsPerPage && endIndex < userListSize) {
@@ -130,7 +130,7 @@ fun ListAllPlayer(
                         .padding(bottom = 16.dp),
                     enabled = currentPage < userListSize.toDouble() / itemsPerPage
                 ) {
-                    Text(text = "Page suivante")
+                    Text(text = "Next page")
                 }
             }
         }

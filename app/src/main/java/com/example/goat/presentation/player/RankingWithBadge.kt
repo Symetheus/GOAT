@@ -60,13 +60,13 @@ fun RankingWithBadge(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Classement des joueurs", style = MaterialTheme.typography.titleLarge
+                text = "Ranking of players", style = MaterialTheme.typography.titleLarge
             )
             Spacer(modifier = Modifier.height(15.dp))
             TextField(
                 value = viewModel.searchTerm.value,
                 onValueChange = { viewModel.searchTerm.value = it },
-                label = { Text("Rechercher un joueur") },
+                label = { Text("Search a player") },
                 modifier = Modifier
                     .height(70.dp)
                     .padding(bottom = 10.dp)
