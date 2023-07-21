@@ -189,7 +189,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
             },
         ) {
             Text(
-                text = "Modifier",
+                text = "Modify",
             )
         }
 
