@@ -1,7 +1,9 @@
 package com.example.goat.data.repository
 
 import com.example.goat.data.remote.api.GotqApi
+import com.example.goat.data.remote.dto.character.toCharacter
 import com.example.goat.data.remote.dto.quote.toQuote
+import com.example.goat.domain.model.Character
 import com.example.goat.domain.model.Quote
 import com.example.goat.domain.repository.GotqRepository
 import javax.inject.Inject
@@ -27,4 +29,8 @@ class GotqDataSource @Inject constructor(private val gotqApi: GotqApi) : GotqRep
     // HOUSES
 
     // CHARACTERS
+    override suspend fun getCharactersList(): List<Character> =
+        gotqApi.getCharactersList().map {
+            it.toCharacter()
+        }
 }

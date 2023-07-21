@@ -71,6 +71,31 @@ fun HomeScreen(
                         text = "Quiz",
                     )
                 }
+                Button(
+                    onClick = { navController.navigate(Screen.ContributionQuizScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Contribution Quiz",
+                    )
+                }
+                Button(
+                    onClick = { navController.navigate(Screen.AddContributionQuizScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Add Contribution Quiz",
+                    )
+                }
+
+                Button(
+                    onClick = { navController.navigate(Screen.ContributionQuizScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Contribution Quiz",
+                    )
+                }
 
                 Button(
                     onClick = { navController.navigate(Screen.ChallengeScreen.route) },
@@ -78,6 +103,15 @@ fun HomeScreen(
                 ) {
                     Text(
                         text = "Create a challenge",
+                    )
+                }
+
+                Button(
+                    onClick = { navController.navigate(Screen.RankingWithBadgeScreen.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "See ranking of players with badge",
                     )
                 }
             }

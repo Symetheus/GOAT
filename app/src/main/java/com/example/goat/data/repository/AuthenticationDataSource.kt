@@ -2,6 +2,7 @@ package com.example.goat.data.repository
 
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
+import com.example.goat.utils.StoreUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore
@@ -15,7 +16,8 @@ class AuthenticationDataSource @Inject constructor(
     AuthenticationRepository {
     override suspend fun signIn(email: String, password: String): User? {
         auth.signInWithEmailAndPassword(email, password).await().let {
-            return it.user?.toUser()
+            val user =  it.user?.toUser()
+            return user
         }
     }
 
@@ -63,5 +65,5 @@ fun FirebaseUser.toUser(): User {
         firstname = null,
         lastname = null,
         badges = 0,
-    )
+        )
 }
