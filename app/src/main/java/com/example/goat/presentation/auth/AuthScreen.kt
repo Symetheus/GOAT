@@ -141,7 +141,6 @@ fun SignInForm(
 
         uiState.user != null -> {
             Text(text = "Bienvenue ${uiState.user.email}")
-            print(Screen.HomeScreen.route)
             LaunchedEffect(Unit) {
                 navController.navigate(Screen.HomeScreen.route)
             }

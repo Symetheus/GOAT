@@ -10,17 +10,17 @@ import retrofit2.http.Path
 /// https://gameofthronesquotes.xyz/
 interface GotqApi {
     // QUOTES
-    @GET("/random")
+    @GET("random")
     suspend fun getRandomQuote(): QuotesResponseItem
 
-    @GET("/random/{quotesNumber}")
-    suspend fun getSeveralRandomQuotes(@Path("quotesNumber") quotesNumber: String): QuotesResponse
+    @GET("random/{quotesNumber}")
+    suspend fun getSeveralRandomQuotes(@Path("quotesNumber") quotesNumber: String): List<QuotesResponseItem>
 
-    @GET("/author/{character}/{quotesNumber}")
+    @GET("author/{character}/{quotesNumber}")
     suspend fun getQuotesByCharacter(
         @Path("character") character: String,
         @Path("quotesNumber") quotesNumber: String
-    ): QuotesResponse
+    ): List<QuotesResponseItem>
 
     // HOUSES
 
