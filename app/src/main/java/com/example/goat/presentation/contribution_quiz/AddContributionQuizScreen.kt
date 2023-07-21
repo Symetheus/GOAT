@@ -48,7 +48,7 @@ fun AddContributionQuizScreen(
     var listCharacter by remember { mutableStateOf(emptyList<Character>()) }
 
     LaunchedEffect(Unit) {
-        listCharacter = quizViewModel.generateCharacters2()
+        listCharacter = quizViewModel.generateCharacters()
     }
 
     LaunchedEffect(quizAddedState) {
