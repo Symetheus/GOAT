@@ -9,6 +9,8 @@ interface AuthenticationRepository {
 
     suspend fun signUp(email: String, password: String): User?
 
+    suspend fun createUserFirestore()
+
     suspend fun signOut()
 
     suspend fun getCurrentUser(): User?

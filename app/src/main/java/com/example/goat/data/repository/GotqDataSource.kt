@@ -34,3 +34,4 @@ class GotqDataSource @Inject constructor(private val gotqApi: GotqApi) : GotqRep
             it.toCharacter()
         }
 }
+

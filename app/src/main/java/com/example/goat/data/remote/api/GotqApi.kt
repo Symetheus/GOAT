@@ -1,6 +1,7 @@
 package com.example.goat.data.remote.api
 
 import com.example.goat.data.remote.dto.character.CharactersResponseItem
+import com.example.goat.data.remote.dto.quote.QuotesResponse
 import com.example.goat.data.remote.dto.quote.QuotesResponseItem
 import retrofit2.http.GET
 import retrofit2.http.Path
