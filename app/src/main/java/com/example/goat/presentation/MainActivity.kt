@@ -2,6 +2,7 @@ package com.example.goat.presentation
 
 import android.content.Intent
 import android.net.Uri
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -21,8 +22,14 @@ import androidx.navigation.navArgument
 import com.example.goat.presentation.auth.AuthScreen
 import com.example.goat.presentation.home.HomeScreen
 import com.example.goat.presentation.challenge.ChallengeScreen
+import com.example.goat.presentation.player.ListAllPlayer
+import com.example.goat.presentation.player.RankingWithBadge
+import com.example.goat.presentation.profile.UserModify
+import com.example.goat.presentation.profile.UserProfile
 import com.example.goat.presentation.quiz.DailyQuizScreen
 import com.example.goat.presentation.quiz.QuizScreen
+import com.example.goat.presentation.contribution_quiz.AddContributionQuizScreen
+import com.example.goat.presentation.contribution_quiz.ContributionQuizScreen
 import com.example.goat.presentation.ui.theme.GoatTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -66,6 +73,15 @@ fun MainScreen(intent: Intent) {
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
             HomeScreen(navController = navController, userId = userId)
         }
+        composable(route = Screen.UserProfile.route) {
+            UserProfile(navController = navController)
+        }
+        composable(route = Screen.UserModify.route) {
+            UserModify(navController = navController)
+        }
+        composable(route = Screen.ListAllPlayer.route) {
+            ListAllPlayer(navController = navController)
+        }
         composable(route = Screen.DailyQuizScreen.route) {
             DailyQuizScreen(navController = navController)
         }
@@ -78,6 +94,16 @@ fun MainScreen(intent: Intent) {
         ) { backStackEntry ->
             val userId = backStackEntry.arguments?.getString("userId") ?: ""
             ChallengeScreen(navController = navController, challengeId = link, userId = userId)
+        }
+
+        composable(route = Screen.ContributionQuizScreen.route) {
+            ContributionQuizScreen(navController = navController)
+        }
+        composable(route = Screen.AddContributionQuizScreen.route) {
+            AddContributionQuizScreen(navController = navController)
+        }
+        composable(route = Screen.RankingWithBadgeScreen.route) {
+            RankingWithBadge(navController = navController)
         }
     }
 }

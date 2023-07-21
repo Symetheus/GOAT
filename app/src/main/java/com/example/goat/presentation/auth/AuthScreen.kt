@@ -88,8 +88,8 @@ fun AuthContent(
                 TextButton(onClick = { onSwapFormClicked() }) {
                     Text(
                         text =
-                        if (uiState.isSignInFormVisible) "Je n'ai pas encore de compte. S'inscrire !"
-                        else "J'ai déjà un compte. Se connecter !",
+                        if (uiState.isSignInFormVisible) "I don't have an account yet. Sign up now !"
+                        else "I already have an account. Sign in now !",
                     )
                 }
             }
@@ -119,14 +119,13 @@ fun SignInForm(
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
-        label = { Text(text = "Mot de passe") },
+        label = { Text(text = "Password") },
         modifier = Modifier.fillMaxWidth(),
         visualTransformation = PasswordVisualTransformation(),
     )
 
     when {
         uiState.isLoading -> {
-            // Text(text = "Connexion en cours...")
             CircularProgressIndicator(
                 color = MaterialTheme.colorScheme.primary,
                 strokeWidth = 4.dp,
@@ -140,7 +139,7 @@ fun SignInForm(
         }
 
         uiState.user != null -> {
-            Text(text = "Bienvenue ${uiState.user.email}")
+            Text(text = "Welcome ${uiState.user.email}")
             LaunchedEffect(Unit) {
                 onLoginSuccess(uiState.user.id)
             }
@@ -151,7 +150,7 @@ fun SignInForm(
         viewModel.onEventChanged(AuthEvent.OnLoginClicked(email, password))
     }, modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "Me connecter",
+            text = "Login",
         )
     }
 }
@@ -178,7 +177,7 @@ fun SignUpForm(
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
-        label = { Text(text = "Mot de passe") },
+        label = { Text(text = "Password") },
         modifier = Modifier.fillMaxWidth(),
         visualTransformation = PasswordVisualTransformation(),
     )
@@ -186,7 +185,7 @@ fun SignUpForm(
     OutlinedTextField(
         value = passwordConfirmation,
         onValueChange = { passwordConfirmation = it },
-        label = { Text(text = "Confirmer le mot de passe") },
+        label = { Text(text = "Confirm password") },
         modifier = Modifier.fillMaxWidth(),
         visualTransformation = PasswordVisualTransformation(),
     )
@@ -210,7 +209,7 @@ fun SignUpForm(
         viewModel.onEventChanged(AuthEvent.OnRegisterClicked(email, password, passwordConfirmation))
     }, modifier = Modifier.fillMaxWidth()) {
         Text(
-            text = "M'inscrire",
+            text = "Sign up",
         )
     }
 }
