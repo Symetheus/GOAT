@@ -37,7 +37,7 @@ import com.example.goat.presentation.Screen
 @Composable
 fun AuthScreen(
     viewModel: AuthViewModel = hiltViewModel(),
-    navController: NavController
+    onLoginSuccess: (String) -> Unit
 ) {
     val uiState = viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -45,7 +45,7 @@ fun AuthScreen(
         uiState = uiState.value,
         viewModel = viewModel,
         onSwapFormClicked = { viewModel.onEventChanged(AuthEvent.OnSwapFormClicked) },
-        navController = navController,
+        onLoginSuccess = onLoginSuccess,
     )
 
     // check if user is already logged in
@@ -59,7 +59,7 @@ fun AuthContent(
     uiState: UiState,
     viewModel: AuthViewModel,
     onSwapFormClicked: () -> Unit,
-    navController: NavController,
+    onLoginSuccess: (String) -> Unit,
 ) {
     Scaffold(
         content = {
@@ -76,7 +76,7 @@ fun AuthContent(
                     SignInForm(
                         uiState = uiState,
                         viewModel = viewModel,
-                        navController = navController
+                        onLoginSuccess = onLoginSuccess
                     )
                 } else {
                     SignUpForm(uiState = uiState, viewModel = viewModel)
@@ -102,7 +102,7 @@ fun AuthContent(
 fun SignInForm(
     uiState: UiState,
     viewModel: AuthViewModel,
-    navController: NavController,
+    onLoginSuccess: (String) -> Unit,
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -141,7 +141,7 @@ fun SignInForm(
         uiState.user != null -> {
             Text(text = "Welcome ${uiState.user.email}")
             LaunchedEffect(Unit) {
-                navController.navigate(Screen.HomeScreen.route)
+                onLoginSuccess(uiState.user.id)
             }
         }
     }
@@ -217,4 +217,4 @@ fun SignUpForm(
 
 @Preview(showBackground = true)
 @Composable
-fun AuthScreenPreview() = AuthScreen(navController = NavController(LocalContext.current))
+fun AuthScreenPreview() = AuthScreen(onLoginSuccess = {})

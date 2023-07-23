@@ -3,16 +3,19 @@ package com.example.goat.di
 import com.example.goat.common.BASE_URL
 import com.example.goat.data.remote.api.GotqApi
 import com.example.goat.data.repository.AuthenticationDataSource
+import com.example.goat.data.repository.ChallengeDataSource
 import com.example.goat.data.repository.ContributionQuizDataSource
 import com.example.goat.data.repository.GotqDataSource
 import com.example.goat.data.repository.ProfileDataSource
 import com.example.goat.data.repository.UserDataSource
 import com.example.goat.domain.repository.AuthenticationRepository
+import com.example.goat.domain.repository.ChallengeRepository
 import com.example.goat.domain.repository.ContributionQuizRepository
 import com.example.goat.domain.repository.GotqRepository
 import com.example.goat.domain.repository.ProfileRepository
 import com.example.goat.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.squareup.moshi.Moshi
@@ -88,5 +91,20 @@ object AppModule {
     @Singleton
     fun provideContributionQuizRepository(firestore: FirebaseFirestore): ContributionQuizRepository {
         return ContributionQuizDataSource(firestore)
+    }
+
+    @Provides
+    @Singleton
+    fun provideChallengeRepository(
+        firestore: FirebaseFirestore,
+        dynamicLinks: FirebaseDynamicLinks
+    ): ChallengeRepository {
+        return ChallengeDataSource(firestore, dynamicLinks)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseDynamicLinks(): FirebaseDynamicLinks {
+        return FirebaseDynamicLinks.getInstance()
     }
 }
