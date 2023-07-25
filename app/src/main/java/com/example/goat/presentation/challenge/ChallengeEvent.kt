@@ -2,6 +2,7 @@ package com.example.goat.presentation.challenge
 
 import androidx.compose.runtime.MutableState
 import com.example.goat.domain.model.Challenge
+import com.example.goat.domain.model.User
 
 sealed class ChallengeEvent {
     object GetUser : ChallengeEvent()
@@ -23,5 +24,6 @@ sealed class ChallengeEvent {
     data class OnSelectAnswer(
         val currentQuestionIndex: MutableState<Int>,
         val selectedAnswerIndex: Int,
+        val user: User
     ) : ChallengeEvent()
 }

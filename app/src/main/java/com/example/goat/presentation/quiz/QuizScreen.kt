@@ -36,6 +36,7 @@ fun QuizScreen(
     // launch request to get quotes
     LaunchedEffect(Unit) {
         viewModel.onEventChanged(QuizEvent.GetSeveralQuotes)
+        viewModel.getInformationUserUC()
     }
 
     if (uiState.value.isFinished) {
@@ -96,7 +97,8 @@ fun QuizScreen(
                                 viewModel.onEventChanged(
                                     QuizEvent.OnSelectAnswer(
                                         currentQuestionIndex,
-                                        index
+                                        index,
+                                        uiState.value.user!!,
                                     )
                                 )
                                 // currentQuestionIndex.value = index + 1

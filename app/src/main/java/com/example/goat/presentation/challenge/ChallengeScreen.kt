@@ -78,6 +78,7 @@ fun ChallengeScreen(
                     viewModel.onEventChanged(ChallengeEvent.UserHasJoin)
                     viewModel.onEventChanged(ChallengeEvent.GetChallenge(challengeId))
                 }
+                viewModel.getInformationUserUC()
             }
 
             else -> Unit
@@ -174,6 +175,7 @@ fun ChallengeScreen(
                                     ChallengeEvent.OnSelectAnswer(
                                         currentQuestionIndex,
                                         answersIndex,
+                                        uiState.value.user!!
                                     )
                                 )
                             }) {

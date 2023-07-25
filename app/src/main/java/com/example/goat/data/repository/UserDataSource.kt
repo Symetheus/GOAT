@@ -73,13 +73,13 @@ class UserDataSource @Inject constructor(
         return listAllUsers
     }
 
-    override suspend fun addBadgeForUser(user: User): User? {
+    override suspend fun addBadgeForUser(user: User, badgesInc: Int): User? {
         val docRef =
             firestore.collection("users").document(user.id)
         val documentSnapshot = docRef.get().await()
         if (documentSnapshot.exists()) {
             val currentBadges = documentSnapshot.getLong("badges") ?: 0
-            val newBadges = currentBadges + 2
+            val newBadges = currentBadges + badgesInc
 
             docRef.update("badges", newBadges)
             val updatedUser = user.copy(badges = newBadges)

@@ -8,5 +8,5 @@ interface UserRepository {
 
     suspend fun userRankingWithBadge() : List<User>
 
-    suspend fun addBadgeForUser(user : User): User?
+    suspend fun addBadgeForUser(user : User, badgesInc: Int): User?
 }
