@@ -14,6 +14,7 @@ import com.example.goat.domain.repository.ContributionQuizRepository
 import com.example.goat.domain.repository.GotqRepository
 import com.example.goat.domain.repository.ProfileRepository
 import com.example.goat.domain.repository.UserRepository
+import com.example.goat.presentation.history.FirestoreChallengeRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.dynamiclinks.FirebaseDynamicLinks
 import com.google.firebase.firestore.FirebaseFirestore
@@ -98,6 +99,15 @@ object AppModule {
     fun provideChallengeRepository(
         firestore: FirebaseFirestore,
         dynamicLinks: FirebaseDynamicLinks
+    ): com.example.goat.presentation.history.ChallengeRepository {
+        return FirestoreChallengeRepository()
+    }
+
+    @Provides
+    @Singleton
+    fun provideHistoryRepository(
+        firestore: FirebaseFirestore,
+        dynamicLinks: FirebaseDynamicLinks
     ): ChallengeRepository {
         return ChallengeDataSource(firestore, dynamicLinks)
     }
@@ -107,4 +117,6 @@ object AppModule {
     fun provideFirebaseDynamicLinks(): FirebaseDynamicLinks {
         return FirebaseDynamicLinks.getInstance()
     }
+
+
 }

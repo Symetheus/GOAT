@@ -124,6 +124,15 @@ fun HomeScreen(
                         text = "See ranking of players with badge",
                     )
                 }
+
+                Button(
+                    onClick = { navController.navigate(Screen.History.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "History",
+                    )
+                }
             }
         }
     )

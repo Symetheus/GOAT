@@ -1,5 +1,6 @@
 package com.example.goat.presentation
 
+import HistoryScreen
 import android.content.Intent
 import android.net.Uri
 import android.content.Context
@@ -104,6 +105,9 @@ fun MainScreen(intent: Intent) {
         }
         composable(route = Screen.RankingWithBadgeScreen.route) {
             RankingWithBadge(navController = navController)
+        }
+        composable(route = Screen.History.route) {
+            HistoryScreen()
         }
     }
 }
