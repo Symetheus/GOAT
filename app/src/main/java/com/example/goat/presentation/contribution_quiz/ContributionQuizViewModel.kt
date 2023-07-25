@@ -1,12 +1,16 @@
 package com.example.goat.presentation.contribution_quiz
 
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.contribution_quiz.ContributionQuizInteractor
+import com.example.goat.domain.interactor.profile.ProfileInteractor
+import com.example.goat.domain.interactor.user.UserInteractor
 import com.example.goat.domain.model.Answer
 import com.example.goat.domain.model.ContributionQuiz
+import com.example.goat.domain.model.User
 import com.example.goat.domain.model.toAnswer
 import com.example.goat.presentation.contribution_quiz.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +24,48 @@ import kotlinx.coroutines.plus
 import javax.inject.Inject
 
 @HiltViewModel
-class ContributionQuizViewModel @Inject constructor(private val interactor: ContributionQuizInteractor) :
+class ContributionQuizViewModel @Inject constructor(
+    private val interactor: ContributionQuizInteractor,
+    private val interactorUser: UserInteractor,
+    private val interactorProfil: ProfileInteractor
+) :
     ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
     private val _quizAdded = MutableStateFlow(false)
     val quizAdded get() = _quizAdded
+
+    fun getInformationUserUC() {
+        interactorProfil.getInformationUserUC() .onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        user = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            user = resource.data,
+                            error = "",
+                        )
+                    }
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = null,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
 
     fun addQuizUC(quiz: ContributionQuiz) {
         interactor.addQuizUC(quiz).onEach { resource ->
@@ -105,14 +145,16 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
             ContributionQuizEvent.GetQuiz -> getQuiz()
             is ContributionQuizEvent.OnSelectAnswer -> handleAnswerSelection(
                 event.currentQuestionIndex,
-                event.selectedAnswerIndex
+                event.selectedAnswerIndex,
+                event.user,
             )
         }
     }
 
     private fun handleAnswerSelection(
         currentQuestionIndex: MutableState<Int>,
-        selectedAnswerIndex: Int
+        selectedAnswerIndex: Int,
+        user: User
     ) {
         val quizQuestions = uiState.value.quotes!!
 
@@ -139,13 +181,13 @@ class ContributionQuizViewModel @Inject constructor(private val interactor: Cont
             currentQuestionIndex.value++
         } else {
             println("finished !!")
-            uiState.let {
+            interactorUser.addBadgeUserUC(user = user, incrementBadge = 3).onEach { resource ->
                 _uiState.update {
                     it.copy(
                         isFinished = true,
                     )
                 }
-            }
+            }.launchIn(viewModelScope.plus(Dispatchers.IO))
         }
     }
 }

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.example.goat.presentation.profile.UserProfileViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,6 +42,7 @@ fun ContributionQuizScreen(
 
     LaunchedEffect(Unit) {
         viewModel.onEventChanged(ContributionQuizEvent.GetQuiz)
+        viewModel.getInformationUserUC()
     }
 
     if (uiState.value.isFinished) {
@@ -120,7 +122,8 @@ fun ContributionQuizScreen(
                                             viewModel.onEventChanged(
                                                 ContributionQuizEvent.OnSelectAnswer(
                                                     currentQuestionIndex,
-                                                    index
+                                                    index,
+                                                    uiState.value.user!!,
                                                 )
                                             )
                                         }

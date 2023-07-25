@@ -6,8 +6,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.goat.common.Resource
 import com.example.goat.domain.interactor.auth.AuthInteractor
 import com.example.goat.domain.interactor.challenge.ChallengeInteractor
+import com.example.goat.domain.interactor.profile.ProfileInteractor
+import com.example.goat.domain.interactor.user.UserInteractor
 import com.example.goat.domain.model.Challenge
 import com.example.goat.domain.model.Player
+import com.example.goat.domain.model.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,9 +25,43 @@ import javax.inject.Inject
 class ChallengeViewModel @Inject constructor(
     private val challengeInteractor: ChallengeInteractor,
     private val authInteractor: AuthInteractor,
+    private val userInteractor: UserInteractor,
+    private val profileInteractor: ProfileInteractor
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
+
+    fun getInformationUserUC() {
+        profileInteractor.getInformationUserUC().onEach { resource ->
+            when (resource) {
+                is Resource.Loading -> _uiState.update {
+                    it.copy(
+                        isLoading = true,
+                        user = null,
+                        error = "",
+                    )
+                }
+
+                is Resource.Success -> {
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            user = resource.data,
+                            error = "",
+                        )
+                    }
+                }
+
+                is Resource.Error -> _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        user = null,
+                        error = resource.message ?: "Something happened",
+                    )
+                }
+            }
+        }.launchIn(viewModelScope.plus(Dispatchers.IO))
+    }
 
     private fun onCreate(userId: String) {
         createChallenge(userId)
@@ -201,6 +238,7 @@ class ChallengeViewModel @Inject constructor(
     private fun onSelectAnswer(
         currentQuestionIndex: MutableState<Int>,
         selectedAnswerIndex: Int,
+        user: User
     ) {
         val quotes = uiState.value.challenge?.quotes!!
 
@@ -247,7 +285,10 @@ class ChallengeViewModel @Inject constructor(
             currentQuestionIndex.value++
         } else {
             println("finished !!")
-            challengeInteractor.updatePlayerStatusUC(uiState.value.challenge!!, uiState.value.user!!.id)
+            challengeInteractor.updatePlayerStatusUC(
+                uiState.value.challenge!!,
+                uiState.value.user!!.id
+            )
                 .onEach { resource ->
                     when (resource) {
                         is Resource.Loading -> _uiState.update {
@@ -274,6 +315,8 @@ class ChallengeViewModel @Inject constructor(
                         }
                     }
                 }.launchIn(viewModelScope.plus(Dispatchers.IO))
+            userInteractor.addBadgeUserUC(user = user, incrementBadge = 5).onEach {
+            }.launchIn(viewModelScope.plus(Dispatchers.IO))
         }
     }
 
@@ -288,6 +331,7 @@ class ChallengeViewModel @Inject constructor(
             is ChallengeEvent.OnSelectAnswer -> onSelectAnswer(
                 event.currentQuestionIndex,
                 event.selectedAnswerIndex,
+                event.user
             )
         }
     }
