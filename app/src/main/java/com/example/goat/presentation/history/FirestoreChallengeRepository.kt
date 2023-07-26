@@ -2,6 +2,7 @@ package com.example.goat.presentation.history
 import com.example.goat.presentation.history.Challenge
 import com.example.goat.domain.model.Player
 import com.example.goat.domain.model.Quote
+import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -70,7 +71,7 @@ class FirestoreChallengeRepository @Inject constructor() : ChallengeRepository {
                         println("players 3 $players")
                         println("quotes 3 $quotes")
 
-                        challenges.add(Challenge(createdAt.toString(), players, quotes))
+                        challenges.add(Challenge(createdAt as Timestamp, players, quotes))
                     }
                 }
             }
