@@ -1,6 +1,7 @@
 package com.example.goat.presentation.home
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -32,6 +33,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -52,27 +54,31 @@ fun HomeScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp),
+                    .background(color = Color.LightGray),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+                verticalArrangement = Arrangement.Top,
             ) {
-                Spacer(modifier = Modifier.height(16.dp))
                 Icon(
                     imageVector = Icons.Default.AccountCircle,
                     contentDescription = "User Avatar",
                     modifier = Modifier
                         .align(Alignment.End)
                         .clickable { navController.navigate(Screen.UserProfile.route) }
-                        .size(48.dp)
+                        .size(68.dp)
+                        .padding(top = 16.dp, end = 16.dp)
                 )
 
-                Text(text = "Goat", style = MaterialTheme.typography.displayLarge)
-
-                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "Menu",
+                    style = MaterialTheme.typography.displayMedium,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
 
                 Button(
                     onClick = { navController.navigate(Screen.DailyQuizScreen.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp, top = 80.dp)
                 ) {
                     Text(
                         text = "Daily Quiz",
@@ -82,6 +88,7 @@ fun HomeScreen(
                 Button(
                     onClick = { navController.navigate(Screen.QuizScreen.route) },
                     modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = 15.dp, start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "Quiz",
@@ -90,6 +97,7 @@ fun HomeScreen(
                 Button(
                     onClick = { navController.navigate(Screen.ContributionQuizScreen.route) },
                     modifier = Modifier.fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "Contribution Quiz",
@@ -98,6 +106,7 @@ fun HomeScreen(
                 Button(
                     onClick = { navController.navigate(Screen.AddContributionQuizScreen.route) },
                     modifier = Modifier.fillMaxWidth()
+                        .padding(bottom = 15.dp, start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "Add Contribution Quiz",
@@ -106,10 +115,10 @@ fun HomeScreen(
 
                 Button(
                     onClick = {
-                        // navController.navigate(Screen.ChallengeScreen.route)
                         openBottomSheet = true
                     },
                     modifier = Modifier.fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "Create a challenge",
@@ -119,9 +128,10 @@ fun HomeScreen(
                 Button(
                     onClick = { navController.navigate(Screen.RankingWithBadgeScreen.route) },
                     modifier = Modifier.fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
-                        text = "See ranking of players with badge",
+                        text = "See ranking of players",
                     )
                 }
             }
@@ -190,7 +200,10 @@ fun SettingsForm(
             label = { Text(text = "Quotes Number") },
             modifier = Modifier.fillMaxWidth(),
         )
-        Button(onClick = { navController.navigate(Screen.ChallengeScreen.route) }, modifier = Modifier.fillMaxWidth()) {
+        Button(
+            onClick = { navController.navigate(Screen.ChallengeScreen.route) },
+            modifier = Modifier.fillMaxWidth()
+        ) {
             Text(
                 text = "Valider",
             )

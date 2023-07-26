@@ -56,18 +56,21 @@ fun ListAllPlayer(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 10.dp),
+                .background(Color.LightGray),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
 
         ) {
             Text(
-                text = "Players list", style = MaterialTheme.typography.titleLarge
+                text = "Players list",
+                style = MaterialTheme.typography.displaySmall,
+                modifier = Modifier.padding(top = 10.dp)
             )
             Spacer(modifier = Modifier.height(25.dp))
             LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.Start
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 16.dp, end = 16.dp),
             ) {
                 val startIndex = currentPage * itemsPerPage
                 endIndex = minOf(startIndex + itemsPerPage, userListSize)
@@ -77,14 +80,11 @@ fun ListAllPlayer(
                             Column(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .background(Color.LightGray, shape = RoundedCornerShape(8.dp))
+                                    .background(Color.White, shape = RoundedCornerShape(8.dp))
                                     .padding(all = 5.dp)
                             ) {
 
-                                Column(
-                                    modifier = Modifier
-                                        .padding(start = 5.dp)
-                                ) {
+                                Column() {
                                     Text(
                                         text = "${user.lastname} ${user.firstname}",
                                         color = Color.Black,
