@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -33,7 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.goat.utils.StoreUser
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RankingWithBadge(
     navController: NavController, viewModel: PlayerViewModel = hiltViewModel(),
@@ -50,19 +48,21 @@ fun RankingWithBadge(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Ranking of players", style = MaterialTheme.typography.titleLarge
+                text = "Ranking of players",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(top = 10.dp, bottom = 15.dp)
             )
-            Spacer(modifier = Modifier.height(15.dp))
             TextField(
                 value = viewModel.searchTerm.value,
                 onValueChange = { viewModel.searchTerm.value = it },
@@ -75,7 +75,9 @@ fun RankingWithBadge(
                 LoadingSpinner()
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
                     uiState.value.listUser?.let { userList ->

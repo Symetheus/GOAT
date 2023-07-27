@@ -1,7 +1,6 @@
 package com.example.goat.data.repository
 
 import android.net.Uri
-import android.widget.Toast
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.ProfileRepository
@@ -95,8 +94,7 @@ class ProfileDataSource @Inject constructor(
         val referenceImageToUpload = referenceDirImages.child(uniqueFilename)
 
         referenceImageToUpload.putFile(imageUri).await()
-        val downloadUrl = referenceImageToUpload.downloadUrl.await().toString()
-        return downloadUrl
+        return referenceImageToUpload.downloadUrl.await().toString()
     }
 
 }

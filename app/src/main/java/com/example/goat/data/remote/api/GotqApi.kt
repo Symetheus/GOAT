@@ -21,8 +21,6 @@ interface GotqApi {
         @Path("quotesNumber") quotesNumber: String
     ): List<QuotesResponseItem>
 
-    // HOUSES
-
     // CHARACTERS
     @GET("characters")
     suspend fun getCharactersList(): List<CharactersResponseItem>

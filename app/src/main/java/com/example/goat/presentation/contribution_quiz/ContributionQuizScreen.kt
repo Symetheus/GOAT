@@ -1,20 +1,16 @@
 package com.example.goat.presentation.contribution_quiz
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -24,14 +20,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.goat.presentation.profile.UserProfileViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ContributionQuizScreen(
     navController: NavController,
@@ -74,7 +69,9 @@ fun ContributionQuizScreen(
     when {
         uiState.value.isLoading -> {
             Box(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.LightGray),
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(
@@ -93,49 +90,51 @@ fun ContributionQuizScreen(
             val quotes = uiState.value.quotes!!
             val index = currentQuestionIndex.value
 
-            Box(
+            Scaffold(
                 modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
-                    content = {
-                        Column(
-                            modifier = Modifier
-                                .padding(16.dp)
-                                .fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Top,
-                        ) {
-                            Text(text = "Question ${index + 1}/${quotes.size}", style = MaterialTheme.typography.titleSmall)
-                            Spacer(modifier = Modifier.height(15.dp))
-                            Text(text = quotes[index].quote, style = MaterialTheme.typography.titleLarge)
+                content = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(Color.LightGray),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Top,
+                    ) {
+                        Text(
+                            text = "Question ${index + 1}/${quotes.size}",
+                            style = MaterialTheme.typography.titleSmall,
+                            modifier = Modifier.padding(top = 16.dp, bottom = 15.dp)
+                        )
+                        Text(
+                            text = quotes[index].quote,
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                        )
 
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center,
-                            ) {
-                                quotes[index].answers?.forEachIndexed { index, answer ->
-                                    Button(
-                                        onClick = {
-                                            viewModel.onEventChanged(
-                                                ContributionQuizEvent.OnSelectAnswer(
-                                                    currentQuestionIndex,
-                                                    index,
-                                                    uiState.value.user!!,
-                                                )
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center,
+                        ) {
+                            quotes[index].answers?.forEachIndexed { index, answer ->
+                                Button(
+                                    onClick = {
+                                        viewModel.onEventChanged(
+                                            ContributionQuizEvent.OnSelectAnswer(
+                                                currentQuestionIndex,
+                                                index,
+                                                uiState.value.user!!,
                                             )
-                                        }
-                                    ) {
-                                        Text(text = answer.name)
+                                        )
                                     }
+                                ) {
+                                    Text(text = answer.name)
                                 }
                             }
                         }
                     }
-                )
-            }
+                }
+            )
         }
     }
 }

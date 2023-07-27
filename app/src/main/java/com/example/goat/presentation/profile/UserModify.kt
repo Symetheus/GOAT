@@ -5,14 +5,13 @@ import androidx.activity.compose.ManagedActivityResultLauncher
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -105,7 +104,9 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -115,7 +116,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                     painter = rememberAsyncImagePainter(model = imageUrl),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(130.dp)
                         .clip(shape = CircleShape)
                 )
             } else {
@@ -123,7 +124,7 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                     painter = painterResource(id = R.drawable.ic_launcher_foreground),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
-                        .size(120.dp)
+                        .size(130.dp)
                         .clip(shape = CircleShape)
                 )
             }
@@ -140,42 +141,44 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                     }
             )
         }
-        Spacer(modifier = Modifier.height(4.dp))
 
         TextField(
             value = textEmail,
             onValueChange = { textEmail = it },
             label = { Text("Enter email") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.LightGray,
             )
         )
-        Spacer(modifier = Modifier.height(16.dp))
-
         TextField(
             value = textFirstname,
             onValueChange = { textFirstname = it },
             label = { Text("Enter your firstname") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.LightGray,
-            )
+            ),
         )
         TextField(
             value = textLastname,
             onValueChange = { textLastname = it },
             label = { Text("Enter your lastname") },
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, end = 16.dp),
             colors = TextFieldDefaults.textFieldColors(
                 containerColor = Color.LightGray,
             )
         )
-        Spacer(modifier = Modifier.height(26.dp))
 
         Button(
             onClick = {
-                val UserUpdated = User(
+                val userUpdated = User(
                     id = uiState.value.user?.id ?: "",
                     email = textEmail.text,
                     firstname = textFirstname.text,
@@ -184,9 +187,10 @@ fun UserModify(navController: NavController, viewModel: UserProfileViewModel = h
                     photo = imageUrl,
                     badges = uiState.value.user?.badges
                 )
-                viewModel.modifyUserUC(UserUpdated)
+                viewModel.modifyUserUC(userUpdated)
                 navController.popBackStack()
             },
+            modifier = Modifier.padding(top = 26.dp)
         ) {
             Text(
                 text = "Modify",

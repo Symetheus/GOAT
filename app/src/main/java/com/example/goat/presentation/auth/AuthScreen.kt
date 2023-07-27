@@ -1,12 +1,11 @@
 package com.example.goat.presentation.auth
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -25,14 +24,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
-import com.example.goat.presentation.Screen
 
 @Composable
 fun AuthScreen(
@@ -66,7 +63,9 @@ fun AuthContent(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(color = Color.LightGray)
                     .padding(16.dp),
+
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center,
             ) {
@@ -82,10 +81,10 @@ fun AuthContent(
                     SignUpForm(uiState = uiState, viewModel = viewModel)
                 }
 
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TextButton(onClick = { onSwapFormClicked() }) {
+                TextButton(
+                    onClick = { onSwapFormClicked() },
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
                     Text(
                         text =
                         if (uiState.isSignInFormVisible) "I don't have an account yet. Sign up now !"
@@ -107,20 +106,24 @@ fun SignInForm(
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
-    Text(text = "Sign INNNNNN")
+    Text(text = "Sign IN", modifier = Modifier.padding(top = 50.dp))
 
     OutlinedTextField(
         value = email,
         onValueChange = { email = it },
         label = { Text(text = "Email") },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp),
     )
 
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
         label = { Text(text = "Password") },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 32.dp),
         visualTransformation = PasswordVisualTransformation(),
     )
 
@@ -155,7 +158,6 @@ fun SignInForm(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpForm(
     uiState: UiState,
@@ -165,20 +167,23 @@ fun SignUpForm(
     var password by remember { mutableStateOf("") }
     var passwordConfirmation by remember { mutableStateOf("") }
 
-    Text(text = "Sign Up")
+    Text(text = "Sign UP", modifier = Modifier.padding(top = 20.dp))
 
     OutlinedTextField(
         value = email,
         onValueChange = { email = it },
         label = { Text(text = "Email") },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 16.dp),
     )
 
     OutlinedTextField(
         value = password,
         onValueChange = { password = it },
         label = { Text(text = "Password") },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth(),
         visualTransformation = PasswordVisualTransformation(),
     )
 
@@ -186,7 +191,9 @@ fun SignUpForm(
         value = passwordConfirmation,
         onValueChange = { passwordConfirmation = it },
         label = { Text(text = "Confirm password") },
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 16.dp, bottom = 32.dp),
         visualTransformation = PasswordVisualTransformation(),
     )
 

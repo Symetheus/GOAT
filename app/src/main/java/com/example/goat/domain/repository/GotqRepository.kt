@@ -11,8 +11,5 @@ interface GotqRepository {
 
     suspend fun getQuotesByCharacter(character: String, quotesNumber: String): List<Quote>
 
-    // Houses
-
-    // Characters
     suspend fun getCharactersList(): List<Character>
 }

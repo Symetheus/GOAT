@@ -181,7 +181,7 @@ class QuizViewModel @Inject constructor(
             currentQuestionIndex.value++
         } else {
             println("finished !!")
-            interactorUser.addBadgeUserUC(user = user, incrementBadge = 2).onEach { resource ->
+            interactorUser.addBadgeUserUC(user = user, incrementBadge = 2).onEach { _ ->
                 _uiState.update {
                     it.copy(
                         isFinished = true,
