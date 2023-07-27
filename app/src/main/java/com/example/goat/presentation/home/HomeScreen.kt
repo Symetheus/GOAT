@@ -85,7 +85,8 @@ fun HomeScreen(
 
                 Button(
                     onClick = { navController.navigate(Screen.QuizScreen.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(bottom = 15.dp, start = 16.dp, end = 16.dp),
                 ) {
                     Text(
@@ -94,7 +95,8 @@ fun HomeScreen(
                 }
                 Button(
                     onClick = { navController.navigate(Screen.ContributionQuizScreen.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
@@ -103,7 +105,8 @@ fun HomeScreen(
                 }
                 Button(
                     onClick = { navController.navigate(Screen.AddContributionQuizScreen.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(bottom = 15.dp, start = 16.dp, end = 16.dp),
                 ) {
                     Text(
@@ -115,7 +118,8 @@ fun HomeScreen(
                     onClick = {
                         openBottomSheet = true
                     },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
@@ -125,7 +129,8 @@ fun HomeScreen(
 
                 Button(
                     onClick = { navController.navigate(Screen.RankingWithBadgeScreen.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
@@ -135,7 +140,9 @@ fun HomeScreen(
 
                 Button(
                     onClick = { navController.navigate(Screen.History.route) },
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
                 ) {
                     Text(
                         text = "History",
