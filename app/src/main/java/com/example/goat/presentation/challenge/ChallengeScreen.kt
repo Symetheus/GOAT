@@ -66,6 +66,7 @@ fun ChallengeScreen(
     }
 
     LaunchedEffect(lifecycleEvent) {
+        println("ok")
         when (lifecycleEvent) {
             Lifecycle.Event.ON_STOP -> println("ON STOOOOOP")
             Lifecycle.Event.ON_DESTROY -> println("ON DESTROOOOY")
@@ -75,15 +76,18 @@ fun ChallengeScreen(
                 viewModel.onEventChanged(ChallengeEvent.GetUser)
 
                 if (uiState.value.user != null && uiState.value.isUserAuth) {
+                    println("User is auth")
                     viewModel.onEventChanged(ChallengeEvent.CreateChallenge(uiState.value.user!!.id))
+                    println("Create challenge")
+                    viewModel.getInformationUserUC()
                 }
 
                 if (userId != null && challengeId != null) {
                     println("Coming from dynamic Link!")
                     viewModel.onEventChanged(ChallengeEvent.UserHasJoin)
                     viewModel.onEventChanged(ChallengeEvent.GetChallenge(challengeId))
+                    viewModel.getInformationUserUC()
                 }
-                viewModel.getInformationUserUC()
             }
 
             else -> Unit
@@ -130,7 +134,11 @@ fun ChallengeScreen(
                         if (viewModel.isAllPlayersFinished(challenge.players)) {
                             Text("All players have finished the challenge!")
                             challenge.players.forEach {
-                                Text("${it.id}: ${it.score}/${challenge.quotes?.size}")
+                                if (it.id == player.id) {
+                                    Text("Your score: ${it.score}/${challenge.quotes?.size}")
+                                } else {
+                                    Text("Opponent: ${it.score}/${challenge.quotes?.size}")
+                                }
                             }
                         } else {
                             Text("Waiting for other players to finish the challenge...")
