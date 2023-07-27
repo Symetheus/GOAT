@@ -50,19 +50,21 @@ fun RankingWithBadge(
     }
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.LightGray),
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp),
+                .fillMaxWidth(),
             verticalArrangement = Arrangement.Top,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = "Ranking of players", style = MaterialTheme.typography.titleLarge
+                text = "Ranking of players",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(top = 10.dp, bottom = 15.dp)
             )
-            Spacer(modifier = Modifier.height(15.dp))
             TextField(
                 value = viewModel.searchTerm.value,
                 onValueChange = { viewModel.searchTerm.value = it },
@@ -75,7 +77,9 @@ fun RankingWithBadge(
                 LoadingSpinner()
             } else {
                 LazyColumn(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 10.dp, end = 10.dp),
                     horizontalAlignment = Alignment.Start
                 ) {
                     uiState.value.listUser?.let { userList ->

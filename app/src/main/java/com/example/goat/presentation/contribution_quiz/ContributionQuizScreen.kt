@@ -114,7 +114,8 @@ fun ContributionQuizScreen(
                         )
                         Text(
                             text = quotes[index].quote,
-                            style = MaterialTheme.typography.titleLarge
+                            style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.padding(start = 16.dp, end = 16.dp)
                         )
 
                         Column(
