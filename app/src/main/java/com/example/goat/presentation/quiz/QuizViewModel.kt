@@ -30,7 +30,7 @@ class QuizViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     fun getInformationUserUC() {
-        interactorProfil.getInformationUserUC() .onEach { resource ->
+        interactorProfil.getInformationUserUC().onEach { resource ->
             when (resource) {
                 is Resource.Loading -> _uiState.update {
                     it.copy(
@@ -101,8 +101,8 @@ class QuizViewModel @Inject constructor(
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
-    private fun getRandomQuote() {
-        interactor.getRandomQuoteUC().onEach { resource ->
+    internal fun getRandomQuote() {
+        interactor.getRandomQuoteUC.invoke().onEach { resource ->
             when (resource) {
                 is Resource.Loading -> _uiState.update {
                     it.copy(
