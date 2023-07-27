@@ -132,6 +132,15 @@ fun HomeScreen(
                         text = "See ranking of players",
                     )
                 }
+
+                Button(
+                    onClick = { navController.navigate(Screen.History.route) },
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "History",
+                    )
+                }
             }
         }
     )
