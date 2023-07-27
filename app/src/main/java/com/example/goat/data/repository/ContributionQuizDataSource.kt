@@ -1,14 +1,11 @@
 package com.example.goat.data.repository
 
 import com.example.goat.data.remote.dto.quote.ContributionQuoteDto
-import com.example.goat.data.remote.dto.quote.QuoteDto
 import com.example.goat.data.remote.dto.quote.toQuote
 import com.example.goat.domain.model.ContributionQuiz
 import com.example.goat.domain.model.Quote
-import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.ContributionQuizRepository
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ktx.toObject
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 

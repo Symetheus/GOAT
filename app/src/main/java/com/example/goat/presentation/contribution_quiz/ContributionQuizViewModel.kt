@@ -1,6 +1,5 @@
 package com.example.goat.presentation.contribution_quiz
 
-import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,6 @@ import com.example.goat.domain.model.Answer
 import com.example.goat.domain.model.ContributionQuiz
 import com.example.goat.domain.model.User
 import com.example.goat.domain.model.toAnswer
-import com.example.goat.presentation.contribution_quiz.UiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -97,7 +95,7 @@ class ContributionQuizViewModel @Inject constructor(
         }.launchIn(viewModelScope.plus(Dispatchers.IO))
     }
 
-    fun getQuiz() {
+    private fun getQuiz() {
         interactor.getQuizUC().onEach { resource ->
             when (resource) {
                 is Resource.Loading -> _uiState.update {
@@ -181,7 +179,7 @@ class ContributionQuizViewModel @Inject constructor(
             currentQuestionIndex.value++
         } else {
             println("finished !!")
-            interactorUser.addBadgeUserUC(user = user, incrementBadge = 3).onEach { resource ->
+            interactorUser.addBadgeUserUC(user = user, incrementBadge = 3).onEach { _ ->
                 _uiState.update {
                     it.copy(
                         isFinished = true,

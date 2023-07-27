@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
@@ -83,10 +81,10 @@ fun AuthContent(
                     SignUpForm(uiState = uiState, viewModel = viewModel)
                 }
 
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                TextButton(onClick = { onSwapFormClicked() }) {
+                TextButton(
+                    onClick = { onSwapFormClicked() },
+                    modifier = Modifier.padding(top = 16.dp)
+                ) {
                     Text(
                         text =
                         if (uiState.isSignInFormVisible) "I don't have an account yet. Sign up now !"
@@ -160,7 +158,6 @@ fun SignInForm(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpForm(
     uiState: UiState,

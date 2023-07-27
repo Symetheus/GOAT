@@ -3,10 +3,8 @@ package com.example.goat.data.repository
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
 import com.example.goat.domain.repository.UserRepository
-import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import timber.log.Timber
 import javax.inject.Inject
 
 class UserDataSource @Inject constructor(
@@ -82,9 +80,8 @@ class UserDataSource @Inject constructor(
             val newBadges = currentBadges + badgesInc
 
             docRef.update("badges", newBadges)
-            val updatedUser = user.copy(badges = newBadges)
 
-            return updatedUser
+            return user.copy(badges = newBadges)
         }
         return null
     }

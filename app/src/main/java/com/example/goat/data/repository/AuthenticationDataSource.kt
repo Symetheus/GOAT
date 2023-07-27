@@ -2,7 +2,6 @@ package com.example.goat.data.repository
 
 import com.example.goat.domain.model.User
 import com.example.goat.domain.repository.AuthenticationRepository
-import com.example.goat.utils.StoreUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.FirebaseFirestore

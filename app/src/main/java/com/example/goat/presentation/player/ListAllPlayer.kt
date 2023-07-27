@@ -64,9 +64,8 @@ fun ListAllPlayer(
             Text(
                 text = "Players list",
                 style = MaterialTheme.typography.displaySmall,
-                modifier = Modifier.padding(top = 10.dp)
+                modifier = Modifier.padding(top = 10.dp, bottom = 25.dp)
             )
-            Spacer(modifier = Modifier.height(25.dp))
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
@@ -84,7 +83,7 @@ fun ListAllPlayer(
                                     .padding(all = 5.dp)
                             ) {
 
-                                Column() {
+                                Column {
                                     Text(
                                         text = "${user.lastname} ${user.firstname}",
                                         color = Color.Black,

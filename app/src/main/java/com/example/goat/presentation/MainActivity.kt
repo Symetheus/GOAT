@@ -2,7 +2,6 @@ package com.example.goat.presentation
 
 import android.content.Intent
 import android.net.Uri
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -69,9 +68,8 @@ fun MainScreen(intent: Intent) {
         composable(
             route = Screen.HomeScreen.route,
             arguments = listOf(navArgument("userId") { type = NavType.StringType })
-        ) { backStackEntry ->
-            val userId = backStackEntry.arguments?.getString("userId") ?: ""
-            HomeScreen(navController = navController, userId = userId)
+        ) {
+            HomeScreen(navController = navController)
         }
         composable(route = Screen.UserProfile.route) {
             UserProfile(navController = navController)

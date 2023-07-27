@@ -14,9 +14,9 @@ val DarkBlue = Color(0xFF304656)
 val LightBlue = Color(0xFF6d8ea6)
 val AlmostWhite = Color(0xFFF3F3F4)
 val Red = Color(0xFFFF5072)
-val GreenSuccess = Color(0xFF6BDB64);
+val GreenSuccess = Color(0xFF6BDB64)
 
 
 val White = Color(0xFFFFFFFF)
 val Black = Color(0xFF000000)
-val Grey = Color(0xFF9DA0A5);
+val Grey = Color(0xFF9DA0A5)

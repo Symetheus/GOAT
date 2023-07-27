@@ -2,7 +2,6 @@ package com.example.goat.domain.repository
 
 import android.net.Uri
 import com.example.goat.domain.model.Challenge
-import com.google.firebase.firestore.DocumentSnapshot
 import kotlinx.coroutines.flow.Flow
 
 interface ChallengeRepository {
